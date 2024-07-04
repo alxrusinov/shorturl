@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -13,18 +14,12 @@ func Run() {
 
 	cache := make(map[string]string)
 
-mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-if (r.Method != http.MethodPost) {
-	http.Error(w, "Method is not allowed", http.StatusNotFound)
-	return
-}
-
-
+mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 	body, _ := io.ReadAll(r.Body)
-	key := string(body)
+	originURL := string(body)
 
-	shortenURL := generator.GenerateRandomString(10)
-	cache[key] = shortenURL
+	shortenURL := fmt.Sprintf("http://%s/%s",r.Host, generator.GenerateRandomString(10))
+	cache[shortenURL] = originURL
 
 	defer r.Body.Close()
 
@@ -37,11 +32,7 @@ if (r.Method != http.MethodPost) {
 
 })
 
-mux.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-	if (r.Method != http.MethodGet) {
-		http.Error(w, "Method is not allowed", http.StatusNotFound)
-		return
-	}
+mux.HandleFunc("POST /{id}", func(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
 	fullURL, ok := cache[id]
