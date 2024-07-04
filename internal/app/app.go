@@ -5,20 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"net/url"
-)
-
-const (
-	Host    = "localhost:8080"
-	Scheme = "http"
 )
 
 func Run() {
-	urlAddr := url.URL{
-		Scheme: Scheme,
-		Host: Host,
-	}
-
 	mux := http.NewServeMux()
 
 mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -33,9 +22,9 @@ if (r.Method != http.MethodPost) {
 
 	fmt.Println(body)
 
-	shortenUrl := "foo"
+	shortenURL := "foo"
 
-	resp := []byte(shortenUrl)
+	resp := []byte(shortenURL)
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
@@ -51,15 +40,15 @@ mux.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 	}
 	id := r.PathValue("id")
 
-	fullUrl := "http://full-url.com"
+	fullURL := "http://full-url.com"
 
 	fmt.Println(id)
 
 	w.WriteHeader(http.StatusTemporaryRedirect)
-	w.Header().Set("Location", fullUrl)
+	w.Header().Set("Location", fullURL)
 	w.Write([]byte(""))
 
 })
 
-	log.Fatal(http.ListenAndServe(urlAddr.String(), mux))
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
