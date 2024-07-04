@@ -14,7 +14,7 @@ func Run() {
 
 	cache := make(map[string]string)
 
-mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+mux.HandleFunc("POST /", func(w http.ResponseWriter, r *http.Request) {
 	body, _ := io.ReadAll(r.Body)
 	originURL := string(body)
 
@@ -32,7 +32,7 @@ mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 
 })
 
-mux.HandleFunc("POST /{id}", func(w http.ResponseWriter, r *http.Request) {
+mux.HandleFunc("GET /{id}", func(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
 	fullURL, ok := cache[id]
