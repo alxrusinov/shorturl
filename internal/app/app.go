@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -52,10 +51,8 @@ mux.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(id)
-
-	w.WriteHeader(http.StatusTemporaryRedirect)
 	w.Header().Set("Location", fullURL)
+	w.WriteHeader(http.StatusTemporaryRedirect)
 	w.Write([]byte(""))
 
 })
