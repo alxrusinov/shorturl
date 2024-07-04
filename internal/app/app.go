@@ -5,10 +5,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/alxrusinov/shorturl/internal/generator"
 )
 
 func Run() {
 	mux := http.NewServeMux()
+
+	cache := make(map[string]string)
 
 mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 if (r.Method != http.MethodPost) {
@@ -18,11 +22,12 @@ if (r.Method != http.MethodPost) {
 
 
 	body, _ := io.ReadAll(r.Body)
+	key := string(body)
+
+	shortenURL := generator.GenerateRandomString(10)
+	cache[key] = shortenURL
+
 	defer r.Body.Close()
-
-	fmt.Println(body)
-
-	shortenURL := "foo"
 
 	resp := []byte(shortenURL)
 
@@ -40,7 +45,12 @@ mux.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 	}
 	id := r.PathValue("id")
 
-	fullURL := "http://full-url.com"
+	fullURL, ok := cache[id]
+
+	if !ok {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
 
 	fmt.Println(id)
 
