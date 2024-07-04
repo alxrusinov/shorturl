@@ -18,12 +18,12 @@ mux.HandleFunc("POST /", func(w http.ResponseWriter, r *http.Request) {
 	body, _ := io.ReadAll(r.Body)
 	originURL := string(body)
 
-	shortenURL := fmt.Sprintf("http://%s/%s",r.Host, generator.GenerateRandomString(10))
+	shortenURL := generator.GenerateRandomString(10)
 	cache[shortenURL] = originURL
 
 	defer r.Body.Close()
 
-	resp := []byte(shortenURL)
+	resp := []byte(fmt.Sprintf("http://%s/%s",r.Host, shortenURL))
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
