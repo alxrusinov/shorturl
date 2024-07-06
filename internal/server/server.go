@@ -1,31 +1,29 @@
 package server
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/store"
+	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	mux     *http.ServeMux
+	mux     *gin.Engine
 	handler *handler.Handler
 }
 
 func (server *Server) Run() {
-	log.Fatal(http.ListenAndServe(":8080", server.mux))
+	server.mux.Run(":8080")
 }
 
 func CreateServer(store store.Store) *Server {
 	server := &Server{
-		mux:     http.NewServeMux(),
+		mux:     gin.Default(),
 		handler: handler.CreateHandler(store),
 	}
 
-	server.mux.HandleFunc("POST /", server.handler.GetShortLink)
+	server.mux.POST("/", server.handler.GetShortLink)
 
-	server.mux.HandleFunc("GET /{id}", server.handler.GetOriginalLink)
+	server.mux.GET("/:id", server.handler.GetOriginalLink)
 
 	return server
 }

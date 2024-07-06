@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -8,13 +9,18 @@ import (
 	"testing"
 
 	"github.com/alxrusinov/shorturl/internal/store"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestHandler_GetOriginalLink(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	testStore := store.CreateStore()
 	testHandler := CreateHandler(testStore)
+	router := gin.New()
+
+	router.GET("/:id", testHandler.GetOriginalLink)
 
 	originalLink := "http://example.com"
 	shortenLink := "abcde"
@@ -41,11 +47,12 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			request := httptest.NewRequest(http.MethodGet, "http://localhost:8080", nil)
-			request.SetPathValue("id", shortenLink)
+			request := httptest.NewRequest(http.MethodGet, "http://localhost:8080/abcde", nil)
+
+			fmt.Printf("%+v", request)
 
 			w := httptest.NewRecorder()
-			testHandler.GetOriginalLink(w, request)
+			router.ServeHTTP(w, request)
 
 			res := w.Result()
 
@@ -61,8 +68,12 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 }
 
 func TestHandler_GetShortLink(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	testStore := store.CreateStore()
 	testHandler := CreateHandler(testStore)
+	router := gin.New()
+
+	router.POST("/", testHandler.GetShortLink)
 
 	type want struct {
 		code        int
@@ -88,9 +99,8 @@ func TestHandler_GetShortLink(t *testing.T) {
 
 	for _, test := range tests {
 		request := httptest.NewRequest(http.MethodPost, "http://localhost:8080/", strings.NewReader("http://example.com"))
-		// создаём новый Recorder
 		w := httptest.NewRecorder()
-		testHandler.GetShortLink(w, request)
+		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		assert.Equal(t, test.want.code, res.StatusCode)

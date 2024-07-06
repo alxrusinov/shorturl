@@ -7,43 +7,40 @@ import (
 
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/store"
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
 	store store.Store
 }
 
-func (handler *Handler) GetShortLink(w http.ResponseWriter, r *http.Request) {
-	body, _ := io.ReadAll(r.Body)
+func (handler *Handler) GetShortLink(ctx *gin.Context) {
+	body, _ := io.ReadAll(ctx.Request.Body)
 	originURL := string(body)
 
 	shortenURL := generator.GenerateRandomString(10)
 	handler.store.SetLink(shortenURL, originURL)
 
-	defer r.Body.Close()
+	defer ctx.Request.Body.Close()
 
-	resp := []byte(fmt.Sprintf("http://%s/%s", r.Host, shortenURL))
+	resp := []byte(fmt.Sprintf("http://%s/%s", ctx.Request.Host, shortenURL))
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.WriteHeader(http.StatusCreated)
-	w.Write(resp)
-
+	ctx.Data(http.StatusCreated, "text/plain", resp)
 }
 
-func (handler *Handler) GetOriginalLink(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
+	id := ctx.Param("id")
+	defer ctx.Request.Body.Close()
 
 	fullURL, err := handler.store.GetLink(id)
 
 	if err != nil {
-		http.Error(w, "Not found", http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	w.Header().Set("Location", fullURL)
-	w.WriteHeader(http.StatusTemporaryRedirect)
-	w.Write([]byte(""))
-
+	ctx.Header("Location", fullURL)
+	ctx.Status(http.StatusTemporaryRedirect)
 }
 
 func CreateHandler(store store.Store) *Handler {
