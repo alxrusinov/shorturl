@@ -4,12 +4,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/store"
 )
 
 type Server struct {
-	store store.Store
-	mux   *http.ServeMux
+	mux     *http.ServeMux
+	handler *handler.Handler
 }
 
 func (server *Server) Run() {
@@ -18,13 +19,13 @@ func (server *Server) Run() {
 
 func CreateServer(store store.Store) *Server {
 	server := &Server{
-		store: store,
-		mux:   http.NewServeMux(),
+		mux:     http.NewServeMux(),
+		handler: handler.CreateHandler(store),
 	}
 
-	server.mux.HandleFunc("POST /", GetShortLink(server.store))
+	server.mux.HandleFunc("POST /", server.handler.GetShortLink)
 
-	server.mux.HandleFunc("GET /{id}", GetOriginalLink(server.store))
+	server.mux.HandleFunc("GET /{id}", server.handler.GetOriginalLink)
 
 	return server
 }
