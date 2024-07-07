@@ -10,8 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type options struct {
+	responseAddr string
+}
+
 type Handler struct {
-	store store.Store
+	store   store.Store
+	options *options
 }
 
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
@@ -23,7 +28,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	resp := []byte(fmt.Sprintf("http://%s/%s", ctx.Request.Host, shortenURL))
+	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL))
 
 	ctx.Data(http.StatusCreated, "text/plain", resp)
 }
@@ -43,9 +48,12 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	ctx.Status(http.StatusTemporaryRedirect)
 }
 
-func CreateHandler(store store.Store) *Handler {
+func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{
 		store: store,
+		options: &options{
+			responseAddr: responseAddr,
+		},
 	}
 
 	return handler
