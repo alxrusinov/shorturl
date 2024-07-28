@@ -49,7 +49,7 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	ctx.Status(http.StatusTemporaryRedirect)
 }
 
-func (handler *Handler) ApiShorten(ctx *gin.Context) {
+func (handler *Handler) APIShorten(ctx *gin.Context) {
 	content := struct {
 		URL string `json:"url"`
 	}{}

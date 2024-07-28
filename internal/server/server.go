@@ -29,7 +29,7 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 
 	server.mux.GET("/:id", server.handler.GetOriginalLink)
 
-	server.mux.POST("/api/shorten", server.handler.ApiShorten)
+	server.mux.POST("/api/shorten", server.handler.APIShorten)
 
 	return server
 }
