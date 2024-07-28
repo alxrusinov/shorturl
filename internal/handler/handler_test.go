@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -48,8 +49,6 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			request := httptest.NewRequest(http.MethodGet, "http://localhost:8080/abcde", nil)
-
-			fmt.Printf("%+v", request)
 
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, request)
@@ -110,6 +109,67 @@ func TestHandler_GetShortLink(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.NotEmpty(t, resBody)
+		assert.Equal(t, test.want.contentType, w.Header().Get("Content-Type"))
+	}
+
+}
+
+func TestHandler_ApiShorten(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	testStore := store.CreateStore()
+	testHandler := CreateHandler(testStore, "http://localhost:8080")
+	router := gin.New()
+
+	router.POST("/api/shorten", testHandler.ApiShorten)
+
+	content := struct {
+		URL string `json:"url"`
+	}{URL: "http://example.com"}
+
+	result := struct {
+		Result string `json:"result"`
+	}{}
+
+	type want struct {
+		code        int
+		response    string
+		contentType string
+		error       error
+	}
+
+	tests := []struct {
+		name string
+		want want
+	}{
+		{
+			name: "positive test #1",
+			want: want{
+				code:        http.StatusCreated,
+				contentType: "application/json",
+				response:    "",
+				error:       nil,
+			},
+		},
+	}
+
+	send, _ := json.Marshal(&content)
+
+	for _, test := range tests {
+		request := httptest.NewRequest(http.MethodPost, "http://localhost:8080/api/shorten", bytes.NewReader(send))
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, request)
+
+		res := w.Result()
+
+		assert.Equal(t, test.want.code, res.StatusCode)
+
+		if err := json.NewDecoder(res.Body).Decode(&result); err != nil && err != io.EOF {
+			require.NoError(t, err)
+		}
+
+		defer res.Body.Close()
+
+		assert.NotEmpty(t, result.Result)
 		assert.Equal(t, test.want.contentType, w.Header().Get("Content-Type"))
 	}
 

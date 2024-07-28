@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -46,6 +47,38 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 
 	ctx.Header("Location", fullURL)
 	ctx.Status(http.StatusTemporaryRedirect)
+}
+
+func (handler *Handler) ApiShorten(ctx *gin.Context) {
+	content := struct {
+		URL string `json:"url"`
+	}{}
+
+	result := struct {
+		Result string `json:"result"`
+	}{}
+
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	defer ctx.Request.Body.Close()
+
+	shortenURL := generator.GenerateRandomString(10)
+	handler.store.SetLink(shortenURL, content.URL)
+
+	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL)
+
+	resp, err := json.Marshal(&result)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	ctx.Data(http.StatusCreated, "application/json", resp)
+
 }
 
 func CreateHandler(store store.Store, responseAddr string) *Handler {
