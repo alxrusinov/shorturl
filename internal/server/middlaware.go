@@ -2,6 +2,7 @@ package server
 
 import (
 	"compress/gzip"
+	"io"
 	"net/http"
 	"time"
 
@@ -86,7 +87,7 @@ func compressMiddleware() gin.HandlerFunc {
 		if checkGzip(contentEncoding) {
 			rawContent, err := gzip.NewReader(c.Request.Body)
 
-			if err != nil {
+			if err != nil && err != io.EOF {
 				c.AbortWithStatus(http.StatusNotFound)
 				return
 			}
@@ -97,13 +98,14 @@ func compressMiddleware() gin.HandlerFunc {
 			c.Request.Header.Set("Content-Encoding", "identity")
 
 		}
-		c.Next()
 
 		if checkGzip(acceptEncoding) {
 			gz := gzip.NewWriter(c.Writer)
 			c.Header("Content-Encoding", "gzip")
 			c.Writer = &gzipWriter{c.Writer, gz}
 		}
+
+		c.Next()
 
 	}
 }
