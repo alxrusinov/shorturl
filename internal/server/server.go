@@ -25,6 +25,8 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 
 	server.mux.Use(loggerMiddleware(logger))
 
+	server.mux.Use(compressMiddleware())
+
 	server.mux.POST("/", server.handler.GetShortLink)
 
 	server.mux.GET("/:id", server.handler.GetOriginalLink)
