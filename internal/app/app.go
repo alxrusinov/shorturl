@@ -9,7 +9,7 @@ import (
 )
 
 func Run(config *config.Config) {
-	store := store.CreateStore()
+	store := store.CreateFileStore(config.FileStoragePath)
 	handler := handler.CreateHandler(store, config.ResponseURL)
 	logger := logger.CreateLogger()
 	newServer := server.CreateServer(handler, config.BaseURL, logger)

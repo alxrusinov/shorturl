@@ -78,3 +78,9 @@ func (store *FileStore) SetLink(key string, link string) {
 	file.Write(result)
 
 }
+
+func CreateFileStore(filePath string) Store {
+	store := &FileStore{FilePath: filePath}
+
+	return store
+}
