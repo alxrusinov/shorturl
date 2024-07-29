@@ -58,6 +58,8 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 		Result string `json:"result"`
 	}{}
 
+	var shortenURL string
+
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -65,8 +67,14 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	shortenURL := generator.GenerateRandomString(10)
-	handler.store.SetLink(shortenURL, content.URL)
+	link, err := handler.store.GetLink(content.URL)
+
+	if err != nil {
+		shortenURL = generator.GenerateRandomString(10)
+		handler.store.SetLink(shortenURL, content.URL)
+	} else {
+		shortenURL = link
+	}
 
 	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL)
 

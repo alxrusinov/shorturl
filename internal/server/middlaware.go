@@ -79,7 +79,7 @@ func compressMiddleware() gin.HandlerFunc {
 
 		contentType := c.Request.Header.Values("Content-Type")
 
-		if !checkContentType(contentType) {
+		if !checkContentType(contentType) && c.Request.Method != http.MethodPost {
 			c.Next()
 			return
 		}
@@ -103,7 +103,7 @@ func compressMiddleware() gin.HandlerFunc {
 
 		if checkGzip(acceptEncoding) {
 			gz := gzip.NewWriter(c.Writer)
-			c.Header("Content-Encoding", "gzip")
+			c.Writer.Header().Set("Content-Encoding", "gzip")
 			c.Writer = &gzipWriter{c.Writer, gz}
 		}
 
