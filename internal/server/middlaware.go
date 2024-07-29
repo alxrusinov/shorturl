@@ -99,13 +99,13 @@ func compressMiddleware() gin.HandlerFunc {
 
 		}
 
+		c.Next()
+
 		if checkGzip(acceptEncoding) {
 			gz := gzip.NewWriter(c.Writer)
 			c.Header("Content-Encoding", "gzip")
 			c.Writer = &gzipWriter{c.Writer, gz}
 		}
-
-		c.Next()
 
 	}
 }
