@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
-	"os/exec"
+
+	"github.com/google/uuid"
 )
 
 type FileStore struct {
@@ -12,7 +13,7 @@ type FileStore struct {
 }
 
 type Record struct {
-	UUID        []byte `json:"uuid"`
+	UUID        string `json:"uuid"`
 	ShortURL    string `json:"short_url"`
 	OriginalURL string `json:"original_url"`
 }
@@ -57,11 +58,7 @@ func (store *FileStore) SetLink(key string, link string) {
 
 	defer file.Close()
 
-	newUUID, err := exec.Command("uuidgen").Output()
-
-	if err != nil {
-		return
-	}
+	newUUID := uuid.NewString()
 
 	record := &Record{
 		UUID:        newUUID,
