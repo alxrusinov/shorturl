@@ -1,6 +1,7 @@
 package store
 
 import (
+	"bufio"
 	"encoding/json"
 	"errors"
 	"os"
@@ -19,27 +20,29 @@ type Record struct {
 }
 
 func (store *FileStore) GetLink(key string) (string, error) {
-	file, err := os.ReadFile(store.FilePath)
+	file, err := os.OpenFile(store.FilePath, os.O_RDONLY, 0666)
 
 	if err != nil {
 		return "", err
 	}
 
-	content := []Record{}
-
-	err = json.Unmarshal(file, &content)
-
-	if err != nil {
-		return "", err
-	}
+	defer file.Close()
 
 	var result string
 
-	for _, rec := range content {
-		if rec.ShortURL == key {
-			result = rec.OriginalURL
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		record := &Record{}
+		err := json.Unmarshal(scanner.Bytes(), &record)
+		if err == nil && record.ShortURL == key {
+			result = record.OriginalURL
 			break
 		}
+	}
+
+	if scanner.Err() != nil {
+		return "", err
 	}
 
 	if result != "" {
@@ -72,7 +75,7 @@ func (store *FileStore) SetLink(key string, link string) {
 		return
 	}
 
-	file.Write(result)
+	file.Write(append(result, []byte("\n")...))
 
 }
 

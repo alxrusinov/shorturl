@@ -67,14 +67,14 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	link, err := handler.store.GetLink(content.URL)
+	// link, err := handler.store.GetLink(content.URL)
 
-	if err != nil {
-		shortenURL = generator.GenerateRandomString(10)
-		handler.store.SetLink(shortenURL, content.URL)
-	} else {
-		shortenURL = link
-	}
+	// if err != nil {
+	shortenURL = generator.GenerateRandomString(10)
+	handler.store.SetLink(shortenURL, content.URL)
+	// } else {
+	// shortenURL = link
+	// }
 
 	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL)
 
