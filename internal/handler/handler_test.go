@@ -17,7 +17,7 @@ import (
 
 func TestHandler_GetOriginalLink(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateStore()
+	testStore := store.CreateInMemoryStore()
 	testHandler := CreateHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
@@ -68,7 +68,7 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 func TestHandler_GetShortLink(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateStore()
+	testStore := store.CreateInMemoryStore()
 	testHandler := CreateHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
@@ -116,7 +116,7 @@ func TestHandler_GetShortLink(t *testing.T) {
 
 func TestHandler_APIShorten(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateStore()
+	testStore := store.CreateInMemoryStore()
 	testHandler := CreateHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
