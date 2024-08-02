@@ -16,8 +16,10 @@ func (store *InMemoryStore) GetLink(key string) (string, error) {
 
 }
 
-func (store *InMemoryStore) SetLink(key string, link string) {
+func (store *InMemoryStore) SetLink(key string, link string) error {
 	store.data[key] = link
+
+	return nil
 }
 
 func CreateInMemoryStore() Store {

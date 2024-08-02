@@ -10,7 +10,7 @@ import (
 )
 
 type FileStore struct {
-	FilePath string
+	filePath string
 }
 
 type Record struct {
@@ -20,15 +20,13 @@ type Record struct {
 }
 
 func (store *FileStore) GetLink(key string) (string, error) {
-	file, err := os.OpenFile(store.FilePath, os.O_RDONLY, 0666)
+	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
 		return "", err
 	}
 
 	defer file.Close()
-
-	var result string
 
 	scanner := bufio.NewScanner(file)
 
@@ -36,8 +34,7 @@ func (store *FileStore) GetLink(key string) (string, error) {
 		record := &Record{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && record.ShortURL == key {
-			result = record.OriginalURL
-			break
+			return record.OriginalURL, nil
 		}
 	}
 
@@ -45,21 +42,15 @@ func (store *FileStore) GetLink(key string) (string, error) {
 		return "", err
 	}
 
-	if result != "" {
-		return result, nil
-	}
-
-	return result, errors.New("not found")
+	return "", errors.New("not found")
 }
 
-func (store *FileStore) SetLink(key string, link string) {
-	file, err := os.OpenFile(store.FilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+func (store *FileStore) SetLink(key string, link string) error {
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
-		return
+		return err
 	}
-
-	defer file.Close()
 
 	newUUID := uuid.NewString()
 
@@ -72,15 +63,21 @@ func (store *FileStore) SetLink(key string, link string) {
 	result, err := json.Marshal(record)
 
 	if err != nil {
-		return
+		return err
 	}
 
-	file.Write(append(result, []byte("\n")...))
+	_, err = file.Write(append(result, []byte("\n")...))
+
+	if err != nil {
+		return err
+	}
+
+	return file.Close()
 
 }
 
 func CreateFileStore(filePath string) Store {
-	store := &FileStore{FilePath: filePath}
+	store := &FileStore{filePath: filePath}
 
 	return store
 }

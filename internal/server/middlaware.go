@@ -10,30 +10,26 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var zippingContentType = [2]string{"text/html", "application/json"}
-
-var zipFormat = "gzip"
-
 func checkContentType(values []string) bool {
-	var result bool
+	var zippingContentType = map[string]struct{}{"text/html": {}, "application/json": {}}
+
 	for _, value := range values {
-		if value == zippingContentType[0] || value == zippingContentType[1] {
-			result = true
-			break
+		if _, ok := zippingContentType[value]; ok {
+			return true
 		}
 	}
-	return result
+	return false
 }
 
 func checkGzip(values []string) bool {
-	var result bool
+	const zipFormat = "gzip"
+
 	for _, value := range values {
 		if value == zipFormat {
-			result = true
-			break
+			return true
 		}
 	}
-	return result
+	return false
 }
 
 type Middleware func() gin.HandlerFunc
@@ -88,7 +84,7 @@ func compressMiddleware() gin.HandlerFunc {
 			rawContent, err := gzip.NewReader(c.Request.Body)
 
 			if err != nil && err != io.EOF {
-				c.AbortWithStatus(http.StatusNotFound)
+				c.AbortWithStatus(http.StatusInternalServerError)
 				return
 			}
 

@@ -25,7 +25,10 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	originURL := string(body)
 
 	shortenURL := generator.GenerateRandomString(10)
-	handler.store.SetLink(shortenURL, originURL)
+	if err := handler.store.SetLink(shortenURL, originURL); err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
 	defer ctx.Request.Body.Close()
 
@@ -67,14 +70,12 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	// link, err := handler.store.GetLink(content.URL)
-
-	// if err != nil {
 	shortenURL = generator.GenerateRandomString(10)
-	handler.store.SetLink(shortenURL, content.URL)
-	// } else {
-	// shortenURL = link
-	// }
+
+	if err := handler.store.SetLink(shortenURL, content.URL); err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
 	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL)
 
