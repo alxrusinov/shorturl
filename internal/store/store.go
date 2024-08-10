@@ -10,7 +10,7 @@ type Store interface {
 
 func CreateStore(config *config.Config) Store {
 	if config.DBPath != "" {
-		return CreateDbStore(config.DBPath)
+		return CreateDBStore(config.DBPath)
 	}
 
 	if config.FileStoragePath != "" {

@@ -46,7 +46,7 @@ func (store *DBStore) Ping() error {
 	return nil
 }
 
-func CreateDbStore(dbPath string) Store {
+func CreateDBStore(dbPath string) Store {
 	db, err := sql.Open("pgx", dbPath)
 
 	if err != nil {
