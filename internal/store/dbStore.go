@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/jackc/pgx"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type DBStore struct {
@@ -47,7 +47,7 @@ func (store *DBStore) Ping() error {
 }
 
 func CreateDBStore(dbPath string) Store {
-	db, err := sql.Open("postgres", dbPath)
+	db, err := sql.Open("pgx", dbPath)
 
 	if err != nil {
 		log.Fatal(err)
