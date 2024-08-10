@@ -8,6 +8,7 @@ import (
 const (
 	DeafaultBaseURL     = "localhost:8080"
 	DeafaultResponseURL = "http://localhost:8080"
+	DefaultFilePath     = "config.json"
 )
 
 type Config struct {
@@ -20,7 +21,7 @@ type Config struct {
 func (config *Config) Init() {
 	flag.StringVar(&config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
 	flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
-	flag.StringVar(&config.FileStoragePath, "f", "", "path for storage file")
+	flag.StringVar(&config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
 	flag.StringVar(&config.DBPath, "d", "", "path to data base")
 }
 
