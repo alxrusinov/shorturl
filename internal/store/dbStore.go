@@ -7,11 +7,11 @@ import (
 	_ "github.com/jackc/pgx/v5"
 )
 
-type DbStore struct {
+type DBStore struct {
 	db *sql.DB
 }
 
-func (store *DbStore) GetLink(key string) (string, error) {
+func (store *DBStore) GetLink(key string) (string, error) {
 	var s string
 	err := store.db.QueryRow("SELECT original FROM links WHERE short = $1", key).Scan(&s)
 
@@ -22,7 +22,7 @@ func (store *DbStore) GetLink(key string) (string, error) {
 	return s, nil
 }
 
-func (store *DbStore) SetLink(key, link string) error {
+func (store *DBStore) SetLink(key, link string) error {
 	dbQuery := `INSERT INTO links (short, original)
 				VALUES($1, $2);
 				`
@@ -36,7 +36,7 @@ func (store *DbStore) SetLink(key, link string) error {
 	return nil
 }
 
-func (store *DbStore) Ping() error {
+func (store *DBStore) Ping() error {
 	err := store.db.Ping()
 
 	if err != nil {
@@ -53,7 +53,7 @@ func CreateDbStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
-	return &DbStore{
+	return &DBStore{
 		db: db,
 	}
 }
