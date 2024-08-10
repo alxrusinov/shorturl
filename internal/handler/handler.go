@@ -90,6 +90,18 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 }
 
+func (handler *Handler) Ping(ctx *gin.Context) {
+	err := handler.store.Ping()
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+
+}
+
 func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{
 		store: store,

@@ -22,6 +22,10 @@ func (store *InMemoryStore) SetLink(key string, link string) error {
 	return nil
 }
 
+func (store *InMemoryStore) Ping() error {
+	return nil
+}
+
 func CreateInMemoryStore() Store {
 	store := &InMemoryStore{
 		data: make(map[string]string),
