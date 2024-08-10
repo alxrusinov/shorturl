@@ -76,8 +76,8 @@ func (store *FileStore) SetLink(key string, link string) error {
 
 }
 
-funct(store *FileStore) Ping() error {
-file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+func (store *FileStore) Ping() error {
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
 		return err
