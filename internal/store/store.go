@@ -1,6 +1,10 @@
 package store
 
-import "github.com/alxrusinov/shorturl/internal/config"
+import (
+	"fmt"
+
+	"github.com/alxrusinov/shorturl/internal/config"
+)
 
 type Store interface {
 	GetLink(key string) (string, error)
@@ -9,12 +13,13 @@ type Store interface {
 }
 
 func CreateStore(config *config.Config) Store {
+	fmt.Printf("%#v", config)
 	if config.DBPath != "" {
 		return CreateDBStore(config.DBPath)
 	}
 
 	if config.FileStoragePath != "" {
-		return CreateStore(config)
+		return CreateFileStore(config.FileStoragePath)
 	}
 
 	return CreateInMemoryStore()
