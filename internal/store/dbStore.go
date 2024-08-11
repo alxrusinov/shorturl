@@ -65,7 +65,13 @@ func CreateDBStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
+	CloseConnection(db)
+
 	return &DBStore{
 		db: db,
 	}
+}
+
+func CloseConnection(db *sql.DB) {
+	defer db.Close()
 }
