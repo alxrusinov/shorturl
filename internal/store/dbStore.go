@@ -27,10 +27,10 @@ func (store *DBStore) SetLink(key, link string) error {
 				VALUES($1, $2);
 				`
 
-	err := store.db.QueryRow(dbQuery, key, link)
+	_, err := store.db.Exec(dbQuery, key, link)
 
 	if err != nil {
-		return err.Err()
+		return err
 	}
 
 	return nil
@@ -48,6 +48,18 @@ func (store *DBStore) Ping() error {
 
 func CreateDBStore(dbPath string) Store {
 	db, err := sql.Open("pgx", dbPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	initialQuery := `CREATE TABLE IF NOT EXISTS links(
+		id INT PRIMARY KEY,
+		short TEXT,
+		original TEXT,
+	);`
+
+	_, err = db.Exec(initialQuery)
 
 	if err != nil {
 		log.Fatal(err)
