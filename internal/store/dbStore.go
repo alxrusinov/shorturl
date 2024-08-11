@@ -56,7 +56,7 @@ func CreateDBStore(dbPath string) Store {
 	initialQuery := `CREATE TABLE IF NOT EXISTS links(
 		id INT PRIMARY KEY,
 		short TEXT,
-		original TEXT,
+		original TEXT
 	);`
 
 	_, err = db.Exec(initialQuery)
