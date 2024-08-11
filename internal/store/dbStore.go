@@ -23,8 +23,8 @@ func (store *DBStore) GetLink(key string) (string, error) {
 }
 
 func (store *DBStore) SetLink(key, link string) error {
-	dbQuery := `INSERT INTO links (short, original)
-				VALUES($1, $2);
+	dbQuery := `INSERT INTO links VALUES
+				($1, $2);
 				`
 
 	_, err := store.db.Exec(dbQuery, key, link)
@@ -54,7 +54,6 @@ func CreateDBStore(dbPath string) Store {
 	}
 
 	initialQuery := `CREATE TABLE IF NOT EXISTS links(
-		id INT PRIMARY KEY,
 		short TEXT,
 		original TEXT
 	);`
@@ -65,8 +64,6 @@ func CreateDBStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
-	CloseConnection(db)
-
 	return &DBStore{
 		db: db,
 	}
@@ -74,4 +71,5 @@ func CreateDBStore(dbPath string) Store {
 
 func CloseConnection(db *sql.DB) {
 	defer db.Close()
+
 }
