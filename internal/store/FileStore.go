@@ -57,7 +57,7 @@ func (store *FileStore) SetLink(arg *StoreArgs) error {
 
 	record := &Record{
 		UUID:          newUUID,
-		CorrelationId: arg.CorrelationId,
+		CorrelationId: arg.CorrelationID,
 		OriginalURL:   arg.OriginalLink,
 		ShortURL:      arg.ShortLink,
 	}
@@ -101,7 +101,7 @@ func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 		record := &Record{
 			UUID:          newUUID,
-			CorrelationId: val.CorrelationId,
+			CorrelationId: val.CorrelationID,
 			OriginalURL:   val.OriginalLink,
 			ShortURL:      val.ShortLink,
 		}

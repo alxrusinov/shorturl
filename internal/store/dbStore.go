@@ -27,7 +27,7 @@ func (store *DBStore) SetLink(arg *StoreArgs) error {
 				VALUES ($1, $2, $3);
 				`
 
-	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationId)
+	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
 
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 	for _, val := range arg {
 		res := &StoreArgs{}
-		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationId).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationId)
+		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
 		if err != nil {
 			return nil, err

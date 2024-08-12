@@ -16,7 +16,7 @@ type Store interface {
 type StoreArgs struct {
 	ShortLink     string `json:"short_url,omitempty"`
 	OriginalLink  string `json:"original_url,omitempty"`
-	CorrelationId string `json:"correlation_id"`
+	CorrelationID string `json:"correlation_id"`
 }
 
 func CreateStore(config *config.Config) Store {
