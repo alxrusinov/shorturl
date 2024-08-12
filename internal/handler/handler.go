@@ -117,7 +117,43 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 
 }
 
-func (handler *Handler) APIShortenBatch(ctx *gin.Context) {}
+func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
+	content := make([]*store.StoreArgs, 0)
+
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	defer ctx.Request.Body.Close()
+
+	for _, val := range content {
+		shortenURL := generator.GenerateRandomString(10)
+		val.ShortLink = shortenURL
+	}
+
+	result, err := handler.store.SetBatchLink(content)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	for _, val := range result {
+		val.ShortLink = fmt.Sprintf("%s/%s", handler.options.responseAddr, val.ShortLink)
+		val.OriginalLink = ""
+	}
+
+	resp, err := json.Marshal(&result)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	ctx.Data(http.StatusCreated, "application/json", resp)
+
+}
 
 func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{
