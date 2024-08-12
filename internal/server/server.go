@@ -35,5 +35,7 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 
 	server.mux.GET("/ping", server.handler.Ping)
 
+	server.mux.POST("POST /api/shorten/batch", server.handler.APIShortenBatch)
+
 	return server
 }

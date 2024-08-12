@@ -102,6 +102,8 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 
 }
 
+func (handler *Handler) APIShortenBatch(ctx *gin.Context) {}
+
 func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{
 		store: store,
