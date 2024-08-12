@@ -101,9 +101,9 @@ func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 		record := &Record{
 			UUID:          newUUID,
-			CorrelationId: arg.CorrelationId,
-			OriginalURL:   arg.OriginalLink,
-			ShortURL:      arg.ShortLink,
+			CorrelationId: val.CorrelationId,
+			OriginalURL:   val.OriginalLink,
+			ShortURL:      val.ShortLink,
 		}
 
 		result, err := json.Marshal(record)
