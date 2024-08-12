@@ -17,7 +17,7 @@ type Record struct {
 	UUID          string `json:"uuid"`
 	ShortURL      string `json:"short_url"`
 	OriginalURL   string `json:"original_url"`
-	CorrelationId string `json:"correlation_id"`
+	CorrelationID string `json:"correlation_id"`
 }
 
 func (store *FileStore) GetLink(arg *StoreArgs) (string, error) {
@@ -57,7 +57,7 @@ func (store *FileStore) SetLink(arg *StoreArgs) error {
 
 	record := &Record{
 		UUID:          newUUID,
-		CorrelationId: arg.CorrelationID,
+		CorrelationID: arg.CorrelationID,
 		OriginalURL:   arg.OriginalLink,
 		ShortURL:      arg.ShortLink,
 	}
