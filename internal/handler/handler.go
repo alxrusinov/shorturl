@@ -25,14 +25,20 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	originURL := string(body)
 
 	shortenURL := generator.GenerateRandomString(10)
-	if err := handler.store.SetLink(shortenURL, originURL); err != nil {
+
+	links := &store.StoreArgs{
+		ShortLink:    shortenURL,
+		OriginalLink: originURL,
+	}
+
+	if err := handler.store.SetLink(links); err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
 	defer ctx.Request.Body.Close()
 
-	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL))
+	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink))
 
 	ctx.Data(http.StatusCreated, "text/plain", resp)
 }
@@ -41,14 +47,18 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	id := ctx.Param("id")
 	defer ctx.Request.Body.Close()
 
-	fullURL, err := handler.store.GetLink(id)
+	links := &store.StoreArgs{
+		ShortLink: id,
+	}
+
+	originalURL, err := handler.store.GetLink(links)
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	ctx.Header("Location", fullURL)
+	ctx.Header("Location", originalURL)
 	ctx.Status(http.StatusTemporaryRedirect)
 }
 
@@ -72,12 +82,17 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	shortenURL = generator.GenerateRandomString(10)
 
-	if err := handler.store.SetLink(shortenURL, content.URL); err != nil {
+	links := &store.StoreArgs{
+		ShortLink:    shortenURL,
+		OriginalLink: content.URL,
+	}
+
+	if err := handler.store.SetLink(links); err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, shortenURL)
+	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink)
 
 	resp, err := json.Marshal(&result)
 

@@ -6,8 +6,8 @@ type InMemoryStore struct {
 	data map[string]string
 }
 
-func (store *InMemoryStore) GetLink(key string) (string, error) {
-	link, ok := store.data[key]
+func (store *InMemoryStore) GetLink(arg *StoreArgs) (string, error) {
+	link, ok := store.data[arg.ShortLink]
 	if !ok {
 		return "", errors.New("key error")
 	}
@@ -16,8 +16,8 @@ func (store *InMemoryStore) GetLink(key string) (string, error) {
 
 }
 
-func (store *InMemoryStore) SetLink(key string, link string) error {
-	store.data[key] = link
+func (store *InMemoryStore) SetLink(arg *StoreArgs) error {
+	store.data[arg.CorrelationId] = arg.OriginalLink
 
 	return nil
 }

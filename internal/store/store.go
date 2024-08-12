@@ -7,9 +7,15 @@ import (
 )
 
 type Store interface {
-	GetLink(key string) (string, error)
-	SetLink(key string, link string) error
+	GetLink(arg *StoreArgs) (string, error)
+	SetLink(arg *StoreArgs) error
 	Ping() error
+}
+
+type StoreArgs struct {
+	ShortLink     string
+	OriginalLink  string
+	CorrelationId string
 }
 
 func CreateStore(config *config.Config) Store {

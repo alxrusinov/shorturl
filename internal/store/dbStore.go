@@ -11,9 +11,9 @@ type DBStore struct {
 	db *sql.DB
 }
 
-func (store *DBStore) GetLink(key string) (string, error) {
+func (store *DBStore) GetLink(arg *StoreArgs) (string, error) {
 	var s string
-	err := store.db.QueryRow("SELECT original FROM links WHERE short = $1", key).Scan(&s)
+	err := store.db.QueryRow("SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
 
 	if err != nil {
 		return "", err
@@ -22,12 +22,12 @@ func (store *DBStore) GetLink(key string) (string, error) {
 	return s, nil
 }
 
-func (store *DBStore) SetLink(key, link string) error {
-	dbQuery := `INSERT INTO links VALUES
+func (store *DBStore) SetLink(arg *StoreArgs) error {
+	dbQuery := `INSERT INTO links VALUES (short, original)
 				($1, $2);
 				`
 
-	_, err := store.db.Exec(dbQuery, key, link)
+	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink)
 
 	if err != nil {
 		return err
@@ -54,8 +54,10 @@ func CreateDBStore(dbPath string) Store {
 	}
 
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
+		id SERIAL PRIMARY KEY,
 		short TEXT,
-		original TEXT
+		original TEXT,
+		correlation_id TEXT
 	);`
 
 	_, err = db.Exec(initialQuery)

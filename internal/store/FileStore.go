@@ -19,7 +19,7 @@ type Record struct {
 	OriginalURL string `json:"original_url"`
 }
 
-func (store *FileStore) GetLink(key string) (string, error) {
+func (store *FileStore) GetLink(arg *StoreArgs) (string, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func (store *FileStore) GetLink(key string) (string, error) {
 	for scanner.Scan() {
 		record := &Record{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
-		if err == nil && record.ShortURL == key {
+		if err == nil && record.ShortURL == arg.ShortLink {
 			return record.OriginalURL, nil
 		}
 	}
@@ -45,7 +45,7 @@ func (store *FileStore) GetLink(key string) (string, error) {
 	return "", errors.New("not found")
 }
 
-func (store *FileStore) SetLink(key string, link string) error {
+func (store *FileStore) SetLink(arg *StoreArgs) error {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -56,8 +56,8 @@ func (store *FileStore) SetLink(key string, link string) error {
 
 	record := &Record{
 		UUID:        newUUID,
-		OriginalURL: link,
-		ShortURL:    key,
+		OriginalURL: arg.OriginalLink,
+		ShortURL:    arg.ShortLink,
 	}
 
 	result, err := json.Marshal(record)
