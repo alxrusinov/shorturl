@@ -23,11 +23,11 @@ func (store *DBStore) GetLink(arg *StoreArgs) (string, error) {
 }
 
 func (store *DBStore) SetLink(arg *StoreArgs) error {
-	dbQuery := `INSERT INTO links VALUES (short, original)
-				($1, $2);
+	dbQuery := `INSERT INTO links (short, original, correlation_id)
+				VALUES ($1, $2, $3);
 				`
 
-	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink)
+	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationId)
 
 	if err != nil {
 		return err
@@ -44,6 +44,51 @@ func (store *DBStore) Ping() error {
 	}
 
 	return nil
+}
+
+func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+	tx, err := store.db.Begin()
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer tx.Rollback()
+
+	insertQuery := `INSERT INTO links (short, original, correlation_id)
+				VALUES ($1, $2, $3)
+				RETURNING short, original, correlation_id;
+				`
+
+	stmt, err := tx.Prepare(insertQuery)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	response := make([]*StoreArgs, len(arg))
+
+	for _, val := range arg {
+		res := &StoreArgs{}
+		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationId).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, res)
+
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }
 
 func CreateDBStore(dbPath string) Store {

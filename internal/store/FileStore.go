@@ -14,9 +14,10 @@ type FileStore struct {
 }
 
 type Record struct {
-	UUID        string `json:"uuid"`
-	ShortURL    string `json:"short_url"`
-	OriginalURL string `json:"original_url"`
+	UUID          string `json:"uuid"`
+	ShortURL      string `json:"short_url"`
+	OriginalURL   string `json:"original_url"`
+	CorrelationId string `json:"correlation_id"`
 }
 
 func (store *FileStore) GetLink(arg *StoreArgs) (string, error) {
@@ -55,9 +56,10 @@ func (store *FileStore) SetLink(arg *StoreArgs) error {
 	newUUID := uuid.NewString()
 
 	record := &Record{
-		UUID:        newUUID,
-		OriginalURL: arg.OriginalLink,
-		ShortURL:    arg.ShortLink,
+		UUID:          newUUID,
+		CorrelationId: arg.CorrelationId,
+		OriginalURL:   arg.OriginalLink,
+		ShortURL:      arg.ShortLink,
 	}
 
 	result, err := json.Marshal(record)
@@ -84,6 +86,48 @@ func (store *FileStore) Ping() error {
 	}
 
 	return file.Close()
+}
+
+func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newUUID := uuid.NewString()
+
+	for _, val := range arg {
+
+		record := &Record{
+			UUID:          newUUID,
+			CorrelationId: arg.CorrelationId,
+			OriginalURL:   arg.OriginalLink,
+			ShortURL:      arg.ShortLink,
+		}
+
+		result, err := json.Marshal(record)
+
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = file.Write(append(result, []byte("\n")...))
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	err = file.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return arg, nil
+
 }
 
 func CreateFileStore(filePath string) Store {

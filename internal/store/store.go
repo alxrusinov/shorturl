@@ -9,6 +9,7 @@ import (
 type Store interface {
 	GetLink(arg *StoreArgs) (string, error)
 	SetLink(arg *StoreArgs) error
+	SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error)
 	Ping() error
 }
 
