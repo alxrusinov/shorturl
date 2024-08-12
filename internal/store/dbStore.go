@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"io"
 	"log"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -74,7 +75,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 		res := &StoreArgs{}
 		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
-		if err != nil {
+		if err != nil && err != io.EOF {
 			return nil, err
 		}
 
