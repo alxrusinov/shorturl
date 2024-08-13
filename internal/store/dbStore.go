@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/jackc/pgerrcode"
-	_ "github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pkg/errors"
