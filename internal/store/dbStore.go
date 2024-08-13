@@ -5,36 +5,57 @@ import (
 	"io"
 	"log"
 
+	"github.com/jackc/pgerrcode"
+	_ "github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/pkg/errors"
 )
 
 type DBStore struct {
 	db *sql.DB
 }
 
-func (store *DBStore) GetLink(arg *StoreArgs) (string, error) {
+func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	var s string
 	err := store.db.QueryRow("SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return s, nil
+	arg.OriginalLink = s
+
+	return arg, nil
 }
 
-func (store *DBStore) SetLink(arg *StoreArgs) error {
+func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
+	var err error
 	dbQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3);
+				VALUES ($1, $2, $3)
+				ON CONFLICT original DO NOTHING;
 				`
 
-	_, err := store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
+	selectQuery := `SELECT short FROM links WHERE original = $1 `
+
+	_, err = store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
 
 	if err != nil {
-		return err
+		if dbErr, ok := err.(*pgconn.PgError); ok {
+			if dbErr.Code == pgerrcode.UniqueViolation {
+				err := store.db.QueryRow(selectQuery, arg.OriginalLink).Scan(&arg.ShortLink)
+
+				if err != nil {
+					return nil, err
+				}
+
+				return arg, nil
+			}
+		}
+		return nil, err
 	}
 
-	return nil
+	return arg, nil
 }
 
 func (store *DBStore) Ping() error {
@@ -75,7 +96,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 		res := &StoreArgs{}
 		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
-		if err != nil && err != io.EOF {
+		if err != nil && !errors.Is(err, io.EOF) {
 			return nil, err
 		}
 

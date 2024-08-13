@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -31,10 +32,14 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 		OriginalLink: originURL,
 	}
 
-	if err := handler.store.SetLink(links); err != nil {
+	res, err := handler.store.SetLink(links)
+
+	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+
+	links.ShortLink = res.ShortLink
 
 	defer ctx.Request.Body.Close()
 
@@ -51,14 +56,14 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 		ShortLink: id,
 	}
 
-	originalURL, err := handler.store.GetLink(links)
+	res, err := handler.store.GetLink(links)
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	ctx.Header("Location", originalURL)
+	ctx.Header("Location", res.OriginalLink)
 	ctx.Status(http.StatusTemporaryRedirect)
 }
 
@@ -73,7 +78,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	var shortenURL string
 
-	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -87,10 +92,14 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 		OriginalLink: content.URL,
 	}
 
-	if err := handler.store.SetLink(links); err != nil {
+	res, err := handler.store.SetLink(links)
+
+	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+
+	links.ShortLink = res.ShortLink
 
 	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink)
 
@@ -120,7 +129,7 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	var content []*store.StoreArgs
 
-	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}

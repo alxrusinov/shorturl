@@ -6,20 +6,22 @@ type InMemoryStore struct {
 	data map[string]*StoreArgs
 }
 
-func (store *InMemoryStore) GetLink(arg *StoreArgs) (string, error) {
+func (store *InMemoryStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	link, ok := store.data[arg.ShortLink]
 	if !ok {
-		return "", errors.New("key error")
+		return nil, errors.New("key error")
 	}
 
-	return link.OriginalLink, nil
+	arg.OriginalLink = link.OriginalLink
+
+	return arg, nil
 
 }
 
-func (store *InMemoryStore) SetLink(arg *StoreArgs) error {
+func (store *InMemoryStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 	store.data[arg.ShortLink] = arg
 
-	return nil
+	return arg, nil
 }
 
 func (store *InMemoryStore) Ping() error {

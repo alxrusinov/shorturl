@@ -20,7 +20,7 @@ type Record struct {
 	CorrelationID string `json:"correlation_id"`
 }
 
-func (store *FileStore) GetLink(arg *StoreArgs) (string, error) {
+func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -35,22 +35,38 @@ func (store *FileStore) GetLink(arg *StoreArgs) (string, error) {
 		record := &Record{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && record.ShortURL == arg.ShortLink {
-			return record.OriginalURL, nil
+			arg.OriginalLink = record.OriginalURL
+			return arg, nil
 		}
 	}
 
 	if scanner.Err() != nil {
-		return "", err
+		return nil, err
 	}
 
-	return "", errors.New("not found")
+	return nil, errors.New("not found")
 }
 
-func (store *FileStore) SetLink(arg *StoreArgs) error {
+func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	var rows []*Record
+
+	err = json.Unmarshal(&rows)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, val := range rows {
+		if val.OriginalURL == arg.OriginalLink {
+			arg.ShortLink = val.ShortURL
+			return arg, nil
+		}
 	}
 
 	newUUID := uuid.NewString()
@@ -65,16 +81,20 @@ func (store *FileStore) SetLink(arg *StoreArgs) error {
 	result, err := json.Marshal(record)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = file.Write(append(result, []byte("\n")...))
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return file.Close()
+	if err = file.Close(); err != nil {
+		return nil, err
+	}
+
+	return arg, nil
 
 }
 
