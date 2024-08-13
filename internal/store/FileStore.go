@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"io"
 	"os"
 
 	"github.com/google/uuid"
@@ -55,28 +54,19 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 		return nil, err
 	}
 
-	var rows []*Record
+	scanner := bufio.NewScanner(file)
 
-	fileContent, err := io.ReadAll(file)
+	for scanner.Scan() {
+		record := &Record{}
+		err := json.Unmarshal(scanner.Bytes(), &record)
+		if err == nil && record.OriginalURL == arg.OriginalLink {
+			arg.OriginalLink = record.OriginalURL
+			return arg, &DuplicateValueError{Err: errors.New("record already exists")}
+		}
+	}
 
-	if err != nil {
+	if scanner.Err() != nil {
 		return nil, err
-	}
-
-	if len(fileContent) != 0 {
-
-		err = json.Unmarshal(fileContent, &rows)
-
-		if err != nil && !errors.Is(err, io.EOF) {
-			return nil, err
-		}
-	}
-
-	for _, val := range rows {
-		if val.OriginalURL == arg.OriginalLink {
-			arg.ShortLink = val.ShortURL
-			return arg, nil
-		}
 	}
 
 	newUUID := uuid.NewString()
