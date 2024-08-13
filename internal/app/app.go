@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/logger"
@@ -13,6 +15,8 @@ func Run(config *config.Config) {
 	handler := handler.CreateHandler(store, config.ResponseURL)
 	logger := logger.CreateLogger()
 	newServer := server.CreateServer(handler, config.BaseURL, logger)
+
+	fmt.Printf("%#v", store)
 
 	newServer.Run()
 

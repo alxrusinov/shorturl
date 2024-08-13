@@ -1,8 +1,6 @@
 package store
 
 import (
-	"fmt"
-
 	"github.com/alxrusinov/shorturl/internal/config"
 )
 
@@ -20,7 +18,6 @@ type StoreArgs struct {
 }
 
 func CreateStore(config *config.Config) Store {
-	fmt.Printf("%#v", config)
 	if config.DBPath != "" {
 		return CreateDBStore(config.DBPath)
 	}

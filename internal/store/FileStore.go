@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -49,7 +50,7 @@ func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 }
 
 func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
-	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile(store.filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
 		return nil, err
@@ -63,10 +64,14 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 		return nil, err
 	}
 
-	err = json.Unmarshal(fileContent, &rows)
+	if len(fileContent) != 0 {
 
-	if err != nil {
-		return nil, err
+		err = json.Unmarshal(fileContent, &rows)
+
+		if err != nil && !errors.Is(err, io.EOF) {
+			fmt.Println("%#v\n", err)
+			return nil, err
+		}
 	}
 
 	for _, val := range rows {

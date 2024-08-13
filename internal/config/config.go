@@ -8,7 +8,7 @@ import (
 const (
 	DeafaultBaseURL     = "localhost:8080"
 	DeafaultResponseURL = "http://localhost:8080"
-	DefaultFilePath     = "config.json"
+	DefaultFilePath     = "./config.json"
 )
 
 type Config struct {

@@ -51,8 +51,6 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink))
 
-	fmt.Printf("DB ERR: %#v\n", dbErr)
-
 	if dbErr.Err != nil {
 		ctx.Data(http.StatusConflict, "text/plain", resp)
 		return

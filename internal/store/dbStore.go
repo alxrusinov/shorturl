@@ -45,7 +45,6 @@ func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 				err := store.db.QueryRow(selectQuery, arg.OriginalLink).Scan(&arg.ShortLink)
 
 				if err != nil {
-
 					return nil, err
 				}
 
@@ -123,11 +122,9 @@ func CreateDBStore(dbPath string) Store {
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
 		id SERIAL PRIMARY KEY,
 		short TEXT,
-		original TEXT,
+		original TEXT UNIQUE,
 		correlation_id TEXT
-	);
-	ALTER TABLE links
-	ADD UNIQUE (original);`
+	);`
 
 	_, err = db.Exec(initialQuery)
 
