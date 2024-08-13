@@ -118,12 +118,16 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
-	content := make([]*store.StoreArgs, 0)
+	var content []*store.StoreArgs
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusConflict)
 		return
 	}
+	// if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
+	// 	ctx.AbortWithStatus(http.StatusNotFound)
+	// 	return
+	// }
 
 	defer ctx.Request.Body.Close()
 
@@ -147,7 +151,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	resp, err := json.Marshal(&result)
 
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusExpectationFailed)
 		return
 	}
 
