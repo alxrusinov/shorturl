@@ -32,7 +32,7 @@ func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 	var err error
 	dbQuery := `INSERT INTO links (short, original, correlation_id)
 				VALUES ($1, $2, $3)
-				ON CONFLICT original DO NOTHING;
+				ON CONFLICT (original) DO NOTHING;
 				`
 
 	selectQuery := `SELECT short FROM links WHERE original = $1 `
@@ -122,7 +122,7 @@ func CreateDBStore(dbPath string) Store {
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
 		id SERIAL PRIMARY KEY,
 		short TEXT,
-		original TEXT,
+		original TEXT UNIQUE,
 		correlation_id TEXT
 	);`
 
