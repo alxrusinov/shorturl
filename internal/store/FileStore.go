@@ -24,7 +24,7 @@ func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	defer file.Close()
@@ -56,7 +56,7 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 
 	var rows []*Record
 
-	err = json.Unmarshal(&rows)
+	err = json.Unmarshal(file, &rows)
 
 	if err != nil {
 		return nil, err
