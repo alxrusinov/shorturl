@@ -146,8 +146,6 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 
 	resp, err := json.Marshal(&result)
 
-	fmt.Printf("RESULT: %#v - %#v", result, resp)
-
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
