@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
+	"io"
 	"os"
 
 	"github.com/google/uuid"
@@ -56,7 +57,13 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 
 	var rows []*Record
 
-	err = json.Unmarshal([]byte(file), &rows)
+	fileContent, err := io.ReadAll(file)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(fileContent, &rows)
 
 	if err != nil {
 		return nil, err
