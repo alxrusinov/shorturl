@@ -121,13 +121,9 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	var content []*store.StoreArgs
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
-		ctx.AbortWithStatus(http.StatusConflict)
+		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
-	// if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && err != io.EOF {
-	// 	ctx.AbortWithStatus(http.StatusNotFound)
-	// 	return
-	// }
 
 	defer ctx.Request.Body.Close()
 
@@ -150,8 +146,10 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 
 	resp, err := json.Marshal(&result)
 
+	fmt.Printf("RESULT: %#v - %#v", result, resp)
+
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusExpectationFailed)
+		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
