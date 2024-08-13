@@ -123,9 +123,11 @@ func CreateDBStore(dbPath string) Store {
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
 		id SERIAL PRIMARY KEY,
 		short TEXT,
-		original TEXT UNIQUE,
+		original TEXT,
 		correlation_id TEXT
-	);`
+	);
+	ALTER TABLE links
+	ADD UNIQUE (original);`
 
 	_, err = db.Exec(initialQuery)
 
