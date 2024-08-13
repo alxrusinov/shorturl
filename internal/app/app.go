@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/logger"
