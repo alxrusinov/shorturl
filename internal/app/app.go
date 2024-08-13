@@ -16,8 +16,6 @@ func Run(config *config.Config) {
 	logger := logger.CreateLogger()
 	newServer := server.CreateServer(handler, config.BaseURL, logger)
 
-	fmt.Printf("%#v", store)
-
 	newServer.Run()
 
 }

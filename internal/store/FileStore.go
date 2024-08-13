@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -69,7 +68,6 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 		err = json.Unmarshal(fileContent, &rows)
 
 		if err != nil && !errors.Is(err, io.EOF) {
-			fmt.Println("%#v\n", err)
 			return nil, err
 		}
 	}
