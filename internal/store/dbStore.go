@@ -31,8 +31,7 @@ func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 	var err error
 	dbQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3)
-				ON CONFLICT (original) DO NOTHING;
+				VALUES ($1, $2, $3);
 				`
 
 	selectQuery := `SELECT short FROM links WHERE original = $1 `
@@ -42,13 +41,15 @@ func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 	if err != nil {
 		if dbErr, ok := err.(*pgconn.PgError); ok {
 			if dbErr.Code == pgerrcode.UniqueViolation {
+
 				err := store.db.QueryRow(selectQuery, arg.OriginalLink).Scan(&arg.ShortLink)
 
 				if err != nil {
+
 					return nil, err
 				}
 
-				return arg, nil
+				return arg, &DuplicateValueError{Err: dbErr}
 			}
 		}
 		return nil, err

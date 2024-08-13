@@ -34,9 +34,15 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	res, err := handler.store.SetLink(links)
 
+	dbErr := &store.DuplicateValueError{}
+
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
-		return
+		if !errors.As(err, &dbErr) {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+
+		}
+		dbErr.Err = err
 	}
 
 	links.ShortLink = res.ShortLink
@@ -44,6 +50,13 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	defer ctx.Request.Body.Close()
 
 	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink))
+
+	fmt.Printf("DB ERR: %#v\n", dbErr)
+
+	if dbErr.Err != nil {
+		ctx.Data(http.StatusConflict, "text/plain", resp)
+		return
+	}
 
 	ctx.Data(http.StatusCreated, "text/plain", resp)
 }
@@ -94,9 +107,16 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	res, err := handler.store.SetLink(links)
 
+	dbErr := &store.DuplicateValueError{}
+
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
-		return
+		if !errors.As(err, &dbErr) {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+
+		}
+
+		dbErr.Err = err
 	}
 
 	links.ShortLink = res.ShortLink
@@ -107,6 +127,11 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if dbErr.Err != nil {
+		ctx.Data(http.StatusConflict, "application/json", resp)
 		return
 	}
 
