@@ -56,7 +56,7 @@ func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 
 	var rows []*Record
 
-	err = json.Unmarshal(file, &rows)
+	err = json.Unmarshal([]byte(file), &rows)
 
 	if err != nil {
 		return nil, err
