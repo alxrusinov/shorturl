@@ -69,7 +69,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 	defer stmt.Close()
 
-	response := make([]*StoreArgs, len(arg))
+	response := make([]*StoreArgs, 0)
 
 	for _, val := range arg {
 		res := &StoreArgs{}
