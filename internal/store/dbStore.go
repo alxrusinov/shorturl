@@ -68,7 +68,7 @@ func (store *DBStore) Ping() error {
 	return nil
 }
 
-func (store *DBStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
+func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 	tx, err := store.db.Begin()
 
 	if err != nil {

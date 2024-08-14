@@ -108,7 +108,7 @@ func (store *FileStore) Ping() error {
 	return file.Close()
 }
 
-func (store *FileStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
+func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -116,8 +116,6 @@ func (store *FileStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
 	}
 
 	newUUID := uuid.NewString()
-
-	var res []*StoreArgs
 
 	for _, val := range arg {
 
@@ -140,8 +138,6 @@ func (store *FileStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
 			return nil, err
 		}
 
-		res = append(res, &val)
-
 	}
 
 	err = file.Close()
@@ -150,7 +146,7 @@ func (store *FileStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
 		return nil, err
 	}
 
-	return res, nil
+	return arg, nil
 
 }
 
