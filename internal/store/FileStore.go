@@ -140,7 +140,7 @@ func (store *FileStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
 			return nil, err
 		}
 
-		res := append(res, &val)
+		res = append(res, &val)
 
 	}
 
