@@ -28,12 +28,14 @@ func (store *InMemoryStore) Ping() error {
 	return nil
 }
 
-func (store *InMemoryStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+func (store *InMemoryStore) SetBatchLink(arg []StoreArgs) ([]*StoreArgs, error) {
+	var res []*StoreArgs
 	for _, val := range arg {
-		store.data[val.ShortLink] = val
+		store.data[val.ShortLink] = &val
+		res = append(res, &val)
 	}
 
-	return arg, nil
+	return res, nil
 }
 
 func CreateInMemoryStore() Store {

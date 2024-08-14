@@ -149,7 +149,7 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
-	var content []*store.StoreArgs
+	var content []store.StoreArgs
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
 		ctx.AbortWithStatus(http.StatusNotFound)
