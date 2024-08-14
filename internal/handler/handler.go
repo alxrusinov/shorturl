@@ -42,7 +42,6 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 			return
 
 		}
-		dbErr.Err = err
 	}
 
 	links.ShortLink = res.ShortLink

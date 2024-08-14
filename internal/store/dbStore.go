@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"io"
 	"log"
@@ -17,7 +18,7 @@ type DBStore struct {
 
 func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	var s string
-	err := store.db.QueryRow("SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
+	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
 
 	if err != nil {
 		return nil, err
@@ -36,13 +37,13 @@ func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
 
 	selectQuery := `SELECT short FROM links WHERE original = $1 `
 
-	_, err = store.db.Exec(dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
+	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
 
 	if err != nil {
 		if dbErr, ok := err.(*pgconn.PgError); ok {
 			if dbErr.Code == pgerrcode.UniqueViolation {
 
-				err := store.db.QueryRow(selectQuery, arg.OriginalLink).Scan(&arg.ShortLink)
+				err := store.db.QueryRowContext(context.Background(), selectQuery, arg.OriginalLink).Scan(&arg.ShortLink)
 
 				if err != nil {
 					return nil, err
@@ -93,7 +94,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 	for _, val := range arg {
 		res := &StoreArgs{}
-		err := stmt.QueryRow(val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
+		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
 		if err != nil && !errors.Is(err, io.EOF) {
 			return nil, err
@@ -126,7 +127,7 @@ func CreateDBStore(dbPath string) Store {
 		correlation_id TEXT
 	);`
 
-	_, err = db.Exec(initialQuery)
+	_, err = db.ExecContext(context.Background(), initialQuery)
 
 	if err != nil {
 		log.Fatal(err)
