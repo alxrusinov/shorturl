@@ -23,10 +23,12 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 	router.GET("/:id", testHandler.GetOriginalLink)
 
-	originalLink := "http://example.com"
-	shortenLink := "abcde"
+	links := &store.StoreArgs{
+		ShortLink:    "abcde",
+		OriginalLink: "http://example.com",
+	}
 
-	testHandler.store.SetLink(shortenLink, originalLink)
+	testHandler.store.SetLink(links)
 
 	type want struct {
 		code     int
@@ -41,7 +43,7 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 			name: "positive test #1",
 			want: want{
 				code:     http.StatusTemporaryRedirect,
-				response: originalLink,
+				response: links.OriginalLink,
 			},
 		},
 	}

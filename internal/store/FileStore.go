@@ -14,16 +14,17 @@ type FileStore struct {
 }
 
 type Record struct {
-	UUID        string `json:"uuid"`
-	ShortURL    string `json:"short_url"`
-	OriginalURL string `json:"original_url"`
+	UUID          string `json:"uuid"`
+	ShortURL      string `json:"short_url"`
+	OriginalURL   string `json:"original_url"`
+	CorrelationID string `json:"correlation_id"`
 }
 
-func (store *FileStore) GetLink(key string) (string, error) {
+func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	defer file.Close()
@@ -33,46 +34,119 @@ func (store *FileStore) GetLink(key string) (string, error) {
 	for scanner.Scan() {
 		record := &Record{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
-		if err == nil && record.ShortURL == key {
-			return record.OriginalURL, nil
+		if err == nil && record.ShortURL == arg.ShortLink {
+			arg.OriginalLink = record.OriginalURL
+			return arg, nil
 		}
 	}
 
 	if scanner.Err() != nil {
-		return "", err
+		return nil, err
 	}
 
-	return "", errors.New("not found")
+	return nil, errors.New("not found")
 }
 
-func (store *FileStore) SetLink(key string, link string) error {
+func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
+	file, err := os.OpenFile(store.filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		return nil, err
+	}
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		record := &Record{}
+		err := json.Unmarshal(scanner.Bytes(), &record)
+		if err == nil && record.OriginalURL == arg.OriginalLink {
+			arg.OriginalLink = record.OriginalURL
+			return arg, &DuplicateValueError{Err: errors.New("record already exists")}
+		}
+	}
+
+	if scanner.Err() != nil {
+		return nil, err
+	}
+
+	newUUID := uuid.NewString()
+
+	record := &Record{
+		UUID:          newUUID,
+		CorrelationID: arg.CorrelationID,
+		OriginalURL:   arg.OriginalLink,
+		ShortURL:      arg.ShortLink,
+	}
+
+	result, err := json.Marshal(record)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = file.Write(append(result, []byte("\n")...))
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = file.Close(); err != nil {
+		return nil, err
+	}
+
+	return arg, nil
+
+}
+
+func (store *FileStore) Ping() error {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
 		return err
 	}
 
+	return file.Close()
+}
+
+func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newUUID := uuid.NewString()
 
-	record := &Record{
-		UUID:        newUUID,
-		OriginalURL: link,
-		ShortURL:    key,
+	for _, val := range arg {
+
+		record := &Record{
+			UUID:          newUUID,
+			CorrelationID: val.CorrelationID,
+			OriginalURL:   val.OriginalLink,
+			ShortURL:      val.ShortLink,
+		}
+
+		result, err := json.Marshal(record)
+
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = file.Write(append(result, []byte("\n")...))
+
+		if err != nil {
+			return nil, err
+		}
+
 	}
 
-	result, err := json.Marshal(record)
+	err = file.Close()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = file.Write(append(result, []byte("\n")...))
-
-	if err != nil {
-		return err
-	}
-
-	return file.Close()
+	return arg, nil
 
 }
 
