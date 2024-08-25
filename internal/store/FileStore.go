@@ -20,7 +20,7 @@ type Record struct {
 	CorrelationID string `json:"correlation_id"`
 }
 
-func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -47,7 +47,7 @@ func (store *FileStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	return nil, errors.New("not found")
 }
 
-func (store *FileStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -108,7 +108,7 @@ func (store *FileStore) Ping() error {
 	return file.Close()
 }
 
-func (store *FileStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {

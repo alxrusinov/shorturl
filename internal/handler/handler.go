@@ -27,7 +27,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	shortenURL := generator.GenerateRandomString(10)
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: originURL,
 	}
@@ -62,7 +62,7 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	id := ctx.Param("id")
 	defer ctx.Request.Body.Close()
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink: id,
 	}
 
@@ -97,7 +97,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	shortenURL = generator.GenerateRandomString(10)
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: content.URL,
 	}
@@ -149,7 +149,7 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
-	var content []*store.StoreArgs
+	var content []*store.StoreRecord
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
 		ctx.AbortWithStatus(http.StatusNotFound)

@@ -16,7 +16,7 @@ type DBStore struct {
 	db *sql.DB
 }
 
-func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *DBStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var s string
 	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
 
@@ -29,7 +29,7 @@ func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	return arg, nil
 }
 
-func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *DBStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var err error
 	dbQuery := `INSERT INTO links (short, original, correlation_id)
 				VALUES ($1, $2, $3);
@@ -68,7 +68,7 @@ func (store *DBStore) Ping() error {
 	return nil
 }
 
-func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 	tx, err := store.db.Begin()
 
 	if err != nil {
@@ -90,10 +90,10 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 	defer stmt.Close()
 
-	response := make([]*StoreArgs, 0)
+	response := make([]*StoreRecord, 0)
 
 	for _, val := range arg {
-		res := &StoreArgs{}
+		res := &StoreRecord{}
 		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
 		if err != nil && !errors.Is(err, io.EOF) {

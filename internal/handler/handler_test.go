@@ -23,7 +23,7 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 	router.GET("/:id", testHandler.GetOriginalLink)
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink:    "abcde",
 		OriginalLink: "http://example.com",
 	}
