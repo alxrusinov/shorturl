@@ -21,15 +21,36 @@ type Handler struct {
 	options *options
 }
 
+const USER_COOKIE = "user_cookie"
+
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
+	userId, err := ctx.Cookie(USER_COOKIE)
+
+	if err != nil {
+		userId, err = generator.GenerateUserID()
+
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+	}
+
 	body, _ := io.ReadAll(ctx.Request.Body)
 	originURL := string(body)
 
-	shortenURL := generator.GenerateRandomString(10)
+	shortenURL, err := generator.GenerateRandomString(10)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
 	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: originURL,
+		UUID:         userId,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -78,6 +99,19 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShorten(ctx *gin.Context) {
+	userId, err := ctx.Cookie(USER_COOKIE)
+
+	if err != nil {
+		userId, err = generator.GenerateUserID()
+
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+	}
+
 	content := struct {
 		URL string `json:"url"`
 	}{}
@@ -95,11 +129,17 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	shortenURL = generator.GenerateRandomString(10)
+	shortenURL, err = generator.GenerateRandomString(10)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
 	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: content.URL,
+		UUID:         userId,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -149,6 +189,18 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
+	userId, err := ctx.Cookie(USER_COOKIE)
+
+	if err != nil {
+		userId, err = generator.GenerateUserID()
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+	}
+
 	var content []*store.StoreRecord
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
@@ -159,8 +211,15 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	defer ctx.Request.Body.Close()
 
 	for _, val := range content {
-		shortenURL := generator.GenerateRandomString(10)
+		shortenURL, err := generator.GenerateRandomString(10)
+
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
 		val.ShortLink = shortenURL
+		val.UUID = userId
 	}
 
 	result, err := handler.store.SetBatchLink(content)
@@ -183,6 +242,53 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	}
 
 	ctx.Data(http.StatusCreated, "application/json", resp)
+
+}
+
+func (handler *Handler) GetUserLinks(ctx *gin.Context) {
+	userId, err := ctx.Cookie(USER_COOKIE)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	links, err := handler.store.GetLinks(userId)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if len(links) == 0 {
+		ctx.Status(http.StatusNoContent)
+		return
+	}
+
+	var result []struct {
+		Short    string `json:"short_url"`
+		Original string `json:"original_url"`
+	}
+
+	for _, link := range links {
+		newLink := struct {
+			Short    string `json:"short_url"`
+			Original string `json:"original_url"`
+		}{
+			Short:    link.ShortLink,
+			Original: link.OriginalLink,
+		}
+		result = append(result, newLink)
+	}
+
+	resp, err := json.Marshal(&result)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.Data(http.StatusOK, "application/json", resp)
 
 }
 

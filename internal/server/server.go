@@ -37,5 +37,7 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 
 	server.mux.POST("/api/shorten/batch", server.handler.APIShortenBatch)
 
+	server.mux.GET("/api/user/urls", server.handler.GetUserLinks)
+
 	return server
 }

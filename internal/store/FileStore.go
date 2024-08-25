@@ -168,11 +168,6 @@ func (store *FileStore) GetLinks(userId string) ([]StoreRecord, error) {
 		return nil, err
 	}
 
-	if len(result) == 0 {
-
-		return nil, errors.New("not found")
-	}
-
 	return result, nil
 
 }
