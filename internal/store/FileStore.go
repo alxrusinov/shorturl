@@ -13,13 +13,6 @@ type FileStore struct {
 	filePath string
 }
 
-type Record struct {
-	UUID          string `json:"uuid"`
-	ShortURL      string `json:"short_url"`
-	OriginalURL   string `json:"original_url"`
-	CorrelationID string `json:"correlation_id"`
-}
-
 func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
@@ -32,10 +25,10 @@ func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		record := &Record{}
+		record := &StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
-		if err == nil && record.ShortURL == arg.ShortLink {
-			arg.OriginalLink = record.OriginalURL
+		if err == nil && record.ShortLink == arg.ShortLink {
+			arg.OriginalLink = record.OriginalLink
 			return arg, nil
 		}
 	}
@@ -57,10 +50,10 @@ func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		record := &Record{}
+		record := &StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
-		if err == nil && record.OriginalURL == arg.OriginalLink {
-			arg.OriginalLink = record.OriginalURL
+		if err == nil && record.OriginalLink == arg.OriginalLink {
+			arg.OriginalLink = record.OriginalLink
 			return arg, &DuplicateValueError{Err: errors.New("record already exists")}
 		}
 	}
@@ -71,11 +64,11 @@ func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 
 	newUUID := uuid.NewString()
 
-	record := &Record{
+	record := &StoreRecord{
 		UUID:          newUUID,
 		CorrelationID: arg.CorrelationID,
-		OriginalURL:   arg.OriginalLink,
-		ShortURL:      arg.ShortLink,
+		OriginalLink:  arg.OriginalLink,
+		ShortLink:     arg.ShortLink,
 	}
 
 	result, err := json.Marshal(record)
@@ -119,11 +112,11 @@ func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 
 	for _, val := range arg {
 
-		record := &Record{
+		record := &StoreRecord{
 			UUID:          newUUID,
 			CorrelationID: val.CorrelationID,
-			OriginalURL:   val.OriginalLink,
-			ShortURL:      val.ShortLink,
+			OriginalLink:  val.OriginalLink,
+			ShortLink:     val.ShortLink,
 		}
 
 		result, err := json.Marshal(record)
@@ -147,6 +140,40 @@ func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 	}
 
 	return arg, nil
+
+}
+
+func (store *FileStore) GetLinks(userId string) ([]StoreRecord, error) {
+	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var result []StoreRecord
+
+	for scanner.Scan() {
+		record := &StoreRecord{}
+		err := json.Unmarshal(scanner.Bytes(), &record)
+		if err == nil && userId == record.UUID {
+			result = append(result, *record)
+		}
+	}
+
+	if scanner.Err() != nil {
+		return nil, err
+	}
+
+	if len(result) == 0 {
+
+		return nil, errors.New("not found")
+	}
+
+	return result, nil
 
 }
 

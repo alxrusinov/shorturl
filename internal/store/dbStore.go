@@ -113,6 +113,36 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 	return response, nil
 }
 
+func (store *DBStore) GetLinks(userId string) ([]StoreRecord, error) {
+	rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted  FROM links WHERE user_id = $1", userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var result []StoreRecord
+
+	for rows.Next() {
+		var row StoreRecord
+
+		if err := rows.Scan(&row.UUID, &row.ShortLink, &row.OriginalLink, &row.CorrelationID, &row.Deleted); err != nil {
+			return nil, err
+		}
+
+		result = append(result, row)
+
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
 func CreateDBStore(dbPath string) Store {
 	db, err := sql.Open("pgx", dbPath)
 
@@ -122,9 +152,11 @@ func CreateDBStore(dbPath string) Store {
 
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
 		id SERIAL PRIMARY KEY,
+		user_id TEXT,
 		short TEXT,
 		original TEXT UNIQUE,
-		correlation_id TEXT
+		correlation_id TEXT,
+		is_deleted BOOLEAN
 	);`
 
 	_, err = db.ExecContext(context.Background(), initialQuery)

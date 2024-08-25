@@ -36,6 +36,20 @@ func (store *InMemoryStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, er
 	return arg, nil
 }
 
+func (store *InMemoryStore) GetLinks(userId string) ([]StoreRecord, error) {
+	var result []StoreRecord
+
+	for _, val := range store.data {
+		if val.UUID == userId {
+			result = append(result, *val)
+
+		}
+
+	}
+
+	return result, nil
+}
+
 func CreateInMemoryStore() Store {
 	store := &InMemoryStore{
 		data: make(map[string]*StoreRecord),
