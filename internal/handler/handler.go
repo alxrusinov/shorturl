@@ -261,6 +261,7 @@ func (handler *Handler) GetUserLinks(ctx *gin.Context) {
 	}
 
 	if len(links) == 0 {
+		ctx.Header("Content-Type", "application/json")
 		ctx.Status(http.StatusNoContent)
 		return
 	}
