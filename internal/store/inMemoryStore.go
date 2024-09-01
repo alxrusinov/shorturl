@@ -36,11 +36,11 @@ func (store *InMemoryStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, er
 	return arg, nil
 }
 
-func (store *InMemoryStore) GetLinks(userId string) ([]StoreRecord, error) {
+func (store *InMemoryStore) GetLinks(userID string) ([]StoreRecord, error) {
 	var result []StoreRecord
 
 	for _, val := range store.data {
-		if val.UUID == userId {
+		if val.UUID == userID {
 			result = append(result, *val)
 
 		}

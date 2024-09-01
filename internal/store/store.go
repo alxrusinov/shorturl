@@ -9,7 +9,7 @@ type Store interface {
 	SetLink(arg *StoreRecord) (*StoreRecord, error)
 	SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 	Ping() error
-	GetLinks(userId string) ([]StoreRecord, error)
+	GetLinks(userID string) ([]StoreRecord, error)
 }
 
 type StoreRecord struct {

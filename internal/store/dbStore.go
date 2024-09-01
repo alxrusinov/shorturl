@@ -113,8 +113,8 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 	return response, nil
 }
 
-func (store *DBStore) GetLinks(userId string) ([]StoreRecord, error) {
-	rows, err := store.db.QueryContext(context.Background(), "SELECT * FROM links WHERE user_id = $1", userId)
+func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
+	rows, err := store.db.QueryContext(context.Background(), "SELECT * FROM links WHERE user_id = $1", userID)
 
 	if err != nil {
 		return nil, err

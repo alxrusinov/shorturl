@@ -143,7 +143,7 @@ func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 
 }
 
-func (store *FileStore) GetLinks(userId string) ([]StoreRecord, error) {
+func (store *FileStore) GetLinks(userID string) ([]StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -159,7 +159,7 @@ func (store *FileStore) GetLinks(userId string) ([]StoreRecord, error) {
 	for scanner.Scan() {
 		record := &StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
-		if err == nil && userId == record.UUID {
+		if err == nil && userID == record.UUID {
 			result = append(result, *record)
 		}
 	}
