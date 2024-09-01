@@ -114,7 +114,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 }
 
 func (store *DBStore) GetLinks(userId string) ([]StoreRecord, error) {
-	rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted  FROM links WHERE user_id = $1", userId)
+	rows, err := store.db.QueryContext(context.Background(), "SELECT * FROM links WHERE user_id = $1", userId)
 
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func (store *DBStore) GetLinks(userId string) ([]StoreRecord, error) {
 	for rows.Next() {
 		var row StoreRecord
 
-		if err := rows.Scan(&row.UUID, &row.ShortLink, &row.OriginalLink, &row.CorrelationID, &row.Deleted); err != nil {
+		if err := rows.Scan(&row); err != nil {
 			return nil, err
 		}
 
