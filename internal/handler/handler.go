@@ -21,20 +21,20 @@ type Handler struct {
 	options *options
 }
 
-const USER_COOKIE = "user_cookie"
+const UserCookie = "user_cookie"
 
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
-	userId, err := ctx.Cookie(USER_COOKIE)
+	userID, err := ctx.Cookie(UserCookie)
 
 	if err != nil {
-		userId, err = generator.GenerateUserID()
+		userID, err = generator.GenerateUserID()
 
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+		ctx.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
 	}
 
 	body, _ := io.ReadAll(ctx.Request.Body)
@@ -50,7 +50,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: originURL,
-		UUID:         userId,
+		UUID:         userID,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -99,17 +99,17 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShorten(ctx *gin.Context) {
-	userId, err := ctx.Cookie(USER_COOKIE)
+	userID, err := ctx.Cookie(UserCookie)
 
 	if err != nil {
-		userId, err = generator.GenerateUserID()
+		userID, err = generator.GenerateUserID()
 
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+		ctx.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
 	}
 
 	content := struct {
@@ -139,7 +139,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: content.URL,
-		UUID:         userId,
+		UUID:         userID,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -189,16 +189,16 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
-	userId, err := ctx.Cookie(USER_COOKIE)
+	userID, err := ctx.Cookie(UserCookie)
 
 	if err != nil {
-		userId, err = generator.GenerateUserID()
+		userID, err = generator.GenerateUserID()
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		ctx.SetCookie(USER_COOKIE, userId, 60*60*24, "/", "localhost", false, true)
+		ctx.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
 	}
 
 	var content []*store.StoreRecord
@@ -219,7 +219,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 		}
 
 		val.ShortLink = shortenURL
-		val.UUID = userId
+		val.UUID = userID
 	}
 
 	result, err := handler.store.SetBatchLink(content)
@@ -246,14 +246,14 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 }
 
 func (handler *Handler) GetUserLinks(ctx *gin.Context) {
-	userId, err := ctx.Cookie(USER_COOKIE)
+	userID, err := ctx.Cookie(UserCookie)
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	links, err := handler.store.GetLinks(userId)
+	links, err := handler.store.GetLinks(userID)
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
