@@ -31,13 +31,13 @@ func (store *DBStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 
 func (store *DBStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var err error
-	dbQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3);
+	dbQuery := `INSERT INTO links (short, original, correlation_id, user_id)
+				VALUES ($1, $2, $3, $4);
 				`
 
 	selectQuery := `SELECT short FROM links WHERE original = $1 `
 
-	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
+	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID, arg.UUID)
 
 	if err != nil {
 		if dbErr, ok := err.(*pgconn.PgError); ok {
@@ -114,7 +114,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 }
 
 func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
-	rows, err := store.db.QueryContext(context.Background(), "SELECT * FROM links WHERE user_id = $1", userID)
+	rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted FROM links WHERE user_id = $1", userID)
 
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
 	for rows.Next() {
 		var row StoreRecord
 
-		if err := rows.Scan(&row); err != nil {
+		if err := rows.Scan(&row.UUID, &row.ShortLink, &row.OriginalLink, &row.CorrelationID, &row.Deleted); err != nil {
 			return nil, err
 		}
 
@@ -156,7 +156,7 @@ func CreateDBStore(dbPath string) Store {
 		short TEXT,
 		original TEXT UNIQUE,
 		correlation_id TEXT,
-		is_deleted BOOLEAN
+		is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 	);`
 
 	_, err = db.ExecContext(context.Background(), initialQuery)
