@@ -298,10 +298,8 @@ func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {
 	userID, err := ctx.Cookie(UserCookie)
 
 	if err != nil {
-		if err != nil {
-			ctx.AbortWithStatus(http.StatusInternalServerError)
-			return
-		}
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 
 	var shorts []string
