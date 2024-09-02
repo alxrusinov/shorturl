@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -69,7 +68,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink))
+	resp := []byte(createShortLink(handler.options.responseAddr, links.ShortLink))
 
 	if dbErr.Err != nil {
 		ctx.Data(http.StatusConflict, "text/plain", resp)
@@ -158,7 +157,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	links.ShortLink = res.ShortLink
 
-	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink)
+	result.Result = createShortLink(handler.options.responseAddr, links.ShortLink)
 
 	resp, err := json.Marshal(&result)
 
@@ -230,7 +229,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	}
 
 	for _, val := range result {
-		val.ShortLink = fmt.Sprintf("%s/%s", handler.options.responseAddr, val.ShortLink)
+		val.ShortLink = createShortLink(handler.options.responseAddr, val.ShortLink)
 		val.OriginalLink = ""
 	}
 
@@ -276,7 +275,7 @@ func (handler *Handler) GetUserLinks(ctx *gin.Context) {
 			Short    string `json:"short_url"`
 			Original string `json:"original_url"`
 		}{
-			Short:    link.ShortLink,
+			Short:    createShortLink(handler.options.responseAddr, link.ShortLink),
 			Original: link.OriginalLink,
 		}
 		result = append(result, newLink)
