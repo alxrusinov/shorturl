@@ -39,5 +39,7 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 
 	server.mux.GET("/api/user/urls", server.handler.GetUserLinks)
 
+	server.mux.DELETE("/api/users/urls", server.handler.APIDeleteLinks)
+
 	return server
 }

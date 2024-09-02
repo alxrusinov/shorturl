@@ -292,6 +292,8 @@ func (handler *Handler) GetUserLinks(ctx *gin.Context) {
 
 }
 
+func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {}
+
 func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{
 		store: store,
