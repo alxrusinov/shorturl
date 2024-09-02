@@ -77,9 +77,9 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 
 	defer tx.Rollback()
 
-	insertQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3)
-				RETURNING short, original, correlation_id;
+	insertQuery := `INSERT INTO links (short, original, correlation_id, user_id)
+				VALUES ($1, $2, $3, $4)
+				RETURNING short, original, correlation_id, user_id;
 				`
 
 	stmt, err := tx.Prepare(insertQuery)
@@ -94,7 +94,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 
 	for _, val := range arg {
 		res := &StoreRecord{}
-		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
+		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID, val.UUID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
 
 		if err != nil && !errors.Is(err, io.EOF) {
 			return nil, err
