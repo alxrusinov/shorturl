@@ -50,6 +50,20 @@ func (store *InMemoryStore) GetLinks(userID string) ([]StoreRecord, error) {
 	return result, nil
 }
 
+func (store *InMemoryStore) DeleteLinks(userID string, shorts []string) error {
+	for _, shortLink := range shorts {
+		if link, ok := store.data[shortLink]; ok {
+			if userID == link.UUID {
+				link.Deleted = true
+			}
+		} else {
+			return errors.New("key error")
+		}
+	}
+
+	return nil
+}
+
 func CreateInMemoryStore() Store {
 	store := &InMemoryStore{
 		data: make(map[string]*StoreRecord),

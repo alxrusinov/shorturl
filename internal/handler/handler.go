@@ -3,8 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"sync"
 
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/store"
@@ -89,7 +91,7 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	res, err := handler.store.GetLink(links)
 
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.Status(http.StatusGone)
 		return
 	}
 
@@ -292,7 +294,52 @@ func (handler *Handler) GetUserLinks(ctx *gin.Context) {
 
 }
 
-func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {}
+func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {
+	userID, err := ctx.Cookie(UserCookie)
+
+	if err != nil {
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	var shorts []string
+
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&shorts); err != nil && !errors.Is(err, io.EOF) {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	defer ctx.Request.Body.Close()
+
+	var wg sync.WaitGroup
+	workersNum := 3
+	chunks := shortsChunk(shorts, 3)
+	chunksCh := make(chan []string, len(chunks))
+
+	for i := 0; i < workersNum; i++ {
+		wg.Add(1)
+
+		go func(chunksCh chan []string, wg *sync.WaitGroup) {
+
+			for chunk := range chunksCh {
+				err := handler.store.DeleteLinks(userID, chunk)
+				fmt.Printf("%#v", err)
+			}
+
+			wg.Done()
+
+		}(chunksCh, &wg)
+	}
+
+	for _, chunk := range chunks {
+		chunksCh <- chunk
+	}
+
+	wg.Wait()
+	ctx.Status(http.StatusAccepted)
+}
 
 func CreateHandler(store store.Store, responseAddr string) *Handler {
 	handler := &Handler{

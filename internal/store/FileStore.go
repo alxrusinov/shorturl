@@ -172,6 +172,53 @@ func (store *FileStore) GetLinks(userID string) ([]StoreRecord, error) {
 
 }
 
+func (store *FileStore) DeleteLinks(userID string, shorts []string) error {
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE, 0666)
+
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	var result []StoreRecord
+
+	for scanner.Scan() {
+		record := &StoreRecord{}
+		err := json.Unmarshal(scanner.Bytes(), &record)
+		if err == nil && userID == record.UUID {
+
+			for _, link := range shorts {
+				if link == record.ShortLink {
+					record.Deleted = true
+				}
+			}
+			result = append(result, *record)
+		}
+	}
+
+	if scanner.Err() != nil {
+		return err
+	}
+
+	content, err := json.Marshal(&result)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write(content)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func CreateFileStore(filePath string) Store {
 	store := &FileStore{filePath: filePath}
 

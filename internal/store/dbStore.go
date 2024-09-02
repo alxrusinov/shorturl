@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"io"
 	"log"
+	"strings"
 
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -18,7 +19,7 @@ type DBStore struct {
 
 func (store *DBStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var s string
-	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
+	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1 and is_deleted = FALSE", arg.ShortLink).Scan(&s)
 
 	if err != nil {
 		return nil, err
@@ -140,6 +141,37 @@ func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
 	}
 
 	return result, nil
+
+}
+
+func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
+	tx, err := store.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer tx.Rollback()
+
+	deleteQuery := `UPDATE links SET is_deleted = TRUE WHERE user_id = $1 and short IN ($2)`
+
+	placeholders := strings.Join(shorts, ", ")
+
+	stmt, err := tx.Prepare(deleteQuery)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(context.Background(), userID, placeholders)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
