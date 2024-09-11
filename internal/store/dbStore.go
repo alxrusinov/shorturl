@@ -195,11 +195,17 @@ func (store *DBStore) createTable() error {
 }
 
 func CreateDBStore(dbPath string) Store {
+	store := &DBStore{}
+
 	db, err := sql.Open("pgx", dbPath)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	store.db = db
+
+	err = store.createTable()
 
 	if err != nil {
 		log.Fatal(err)
@@ -224,17 +230,8 @@ func CreateDBStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
-	store := &DBStore{
-		db:          db,
-		insertQuery: insertQuery,
-		deleteQuery: deleteQuery,
-	}
-
-	err = store.createTable()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	store.deleteQuery = deleteQuery
+	store.insertQuery = insertQuery
 
 	return store
 }
