@@ -184,9 +184,7 @@ func (store *FileStore) DeleteLinks(shorts [][]StoreRecord) error {
 	var preparedShorts []StoreRecord
 
 	for _, val := range shorts {
-		for _, short := range val {
-			preparedShorts = append(preparedShorts, short)
-		}
+		preparedShorts = append(preparedShorts, val...)
 	}
 
 	scanner := bufio.NewScanner(file)

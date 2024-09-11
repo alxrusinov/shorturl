@@ -82,10 +82,6 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 
 	stmt := tx.Stmt(store.insertQuery)
 
-	if err != nil {
-		return nil, err
-	}
-
 	defer stmt.Close()
 
 	response := make([]*StoreRecord, 0)
@@ -166,10 +162,6 @@ func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
 	userIDsPlaceholders := strings.Join(preparedIDs, ", ")
 
 	stmt := tx.Stmt(store.deleteQuery)
-
-	if err != nil {
-		return err
-	}
 
 	defer stmt.Close()
 
