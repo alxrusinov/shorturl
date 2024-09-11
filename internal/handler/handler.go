@@ -18,11 +18,10 @@ type options struct {
 }
 
 type Handler struct {
-	store   store.Store
-	options *options
+	store       store.Store
+	options     *options
+	Middlewares *Middlewares
 }
-
-const UserCookie = "user_cookie"
 
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	var userID string
@@ -30,6 +29,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	val, ok := ctx.Get("userID")
 
 	if !ok {
+		fmt.Printf("FOO\n")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
@@ -37,6 +37,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	userID, ok = val.(string)
 
 	if !ok {
+		fmt.Printf("FOO 2\n")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}

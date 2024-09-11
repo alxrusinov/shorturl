@@ -23,11 +23,11 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 		addr:    addr,
 	}
 
-	server.mux.Use(loggerMiddleware(logger))
+	server.mux.Use(server.handler.Middlewares.LoggerMiddleware(logger))
 
-	server.mux.Use(compressMiddleware())
+	server.mux.Use(server.handler.Middlewares.CompressMiddleware())
 
-	server.mux.Use(cookieMiddleware())
+	server.mux.Use(server.handler.Middlewares.CookieMiddleware())
 
 	server.mux.POST("/", server.handler.GetShortLink)
 

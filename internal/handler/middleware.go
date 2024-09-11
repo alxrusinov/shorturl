@@ -1,4 +1,4 @@
-package server
+package handler
 
 import (
 	"compress/gzip"
@@ -11,15 +11,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-var routes = map[string]string{
-	"/":                  http.MethodPost,
-	"/:id":               http.MethodGet,
-	"/api/shorten":       http.MethodPost,
-	"/ping":              http.MethodGet,
-	"/api/shorten/batch": http.MethodPost,
-	"/api/user/urls":     http.MethodGet,
-	"/api/users/urls":    http.MethodDelete,
-}
+type Middlewares struct{}
 
 const UserCookie = "user_cookie"
 
@@ -62,7 +54,7 @@ func (g *gzipWriter) WriteHeader(code int) {
 	g.ResponseWriter.WriteHeader(code)
 }
 
-func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
+func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 
@@ -81,7 +73,7 @@ func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	}
 }
 
-func compressMiddleware() gin.HandlerFunc {
+func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		contentEncoding := c.Request.Header.Values("Content-Encoding")
 		acceptEncoding := c.Request.Header.Values("Accept-Encoding")
@@ -119,7 +111,7 @@ func compressMiddleware() gin.HandlerFunc {
 	}
 }
 
-func cookieMiddleware() gin.HandlerFunc {
+func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fullPath := c.FullPath()
 		method := c.Request.Method
