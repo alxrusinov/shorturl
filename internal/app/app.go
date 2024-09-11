@@ -14,6 +14,8 @@ func Run(config *config.Config) {
 	logger := logger.CreateLogger()
 	newServer := server.CreateServer(handler, config.BaseURL, logger)
 
+	newServer.Run()
+
 	go func() {
 		var batch [][]store.StoreRecord
 
@@ -24,7 +26,5 @@ func Run(config *config.Config) {
 			batch = batch[0:0]
 		}
 	}()
-
-	newServer.Run()
 
 }
