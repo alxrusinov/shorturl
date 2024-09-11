@@ -14,7 +14,9 @@ import (
 )
 
 type DBStore struct {
-	db *sql.DB
+	db          *sql.DB
+	deleteQuery *sql.Stmt
+	insertQuery *sql.Stmt
 }
 
 func (store *DBStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
@@ -78,12 +80,7 @@ func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 
 	defer tx.Rollback()
 
-	insertQuery := `INSERT INTO links (short, original, correlation_id, user_id)
-				VALUES ($1, $2, $3, $4)
-				RETURNING short, original, correlation_id, user_id;
-				`
-
-	stmt, err := tx.Prepare(insertQuery)
+	stmt := tx.Stmt(store.insertQuery)
 
 	if err != nil {
 		return nil, err
@@ -153,11 +150,9 @@ func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
 
 	defer tx.Rollback()
 
-	deleteQuery := `UPDATE links SET is_deleted = TRUE WHERE user_id = $1 and short IN ($2)`
-
 	placeholders := strings.Join(shorts, ", ")
 
-	stmt, err := tx.Prepare(deleteQuery)
+	stmt := tx.Stmt(store.deleteQuery)
 
 	if err != nil {
 		return err
@@ -197,8 +192,29 @@ func CreateDBStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
+	insertQueryString := `INSERT INTO links (short, original, correlation_id, user_id)
+				VALUES ($1, $2, $3, $4)
+				RETURNING short, original, correlation_id, user_id;
+				`
+
+	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id = $1 and short IN ($2)`
+
+	insertQuery, err := db.Prepare(insertQueryString)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	deleteQuery, err := db.Prepare(deleteQueryString)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return &DBStore{
-		db: db,
+		db:          db,
+		insertQuery: insertQuery,
+		deleteQuery: deleteQuery,
 	}
 }
 
