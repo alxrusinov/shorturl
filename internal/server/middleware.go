@@ -6,9 +6,22 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 )
+
+var routes = map[string]string{
+	"/":                  http.MethodPost,
+	"/:id":               http.MethodGet,
+	"/api/shorten":       http.MethodPost,
+	"/ping":              http.MethodGet,
+	"/api/shorten/batch": http.MethodPost,
+	"/api/user/urls":     http.MethodGet,
+	"/api/users/urls":    http.MethodDelete,
+}
+
+const UserCookie = "user_cookie"
 
 func checkContentType(values []string) bool {
 	var zippingContentType = map[string]struct{}{"text/html": {}, "application/json": {}}
@@ -101,6 +114,68 @@ func compressMiddleware() gin.HandlerFunc {
 			gz := gzip.NewWriter(c.Writer)
 			c.Writer.Header().Set("Content-Encoding", "gzip")
 			c.Writer = &gzipWriter{c.Writer, gz}
+		}
+
+	}
+}
+
+func cookieMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fullPath := c.FullPath()
+		method := c.Request.Method
+
+		if method == http.MethodPost {
+			userID, err := c.Cookie(UserCookie)
+
+			if err != nil {
+				userID, err = generator.GenerateUserID()
+
+				if err != nil {
+					c.AbortWithStatus(http.StatusInternalServerError)
+					return
+				}
+
+				c.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
+
+			}
+
+			c.Set("userID", userID)
+
+			c.Next()
+
+			return
+		}
+
+		if method == http.MethodGet {
+			if fullPath == "/api/user/urls" {
+				userID, err := c.Cookie(UserCookie)
+
+				if err != nil {
+					c.AbortWithStatus(http.StatusUnauthorized)
+					return
+				}
+
+				c.Set("userID", userID)
+			}
+
+			c.Next()
+
+			return
+		}
+
+		if method == http.MethodDelete {
+			userID, err := c.Cookie(UserCookie)
+
+			if err != nil {
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
+
+			c.Set("userID", userID)
+
+			c.Next()
+
+			return
 		}
 
 	}
