@@ -170,13 +170,7 @@ func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
 
 }
 
-func CreateDBStore(dbPath string) Store {
-	db, err := sql.Open("pgx", dbPath)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func (store *DBStore) createTable() error {
 	initialQuery := `CREATE TABLE IF NOT EXISTS links (
 		id SERIAL PRIMARY KEY,
 		user_id TEXT,
@@ -186,7 +180,21 @@ func CreateDBStore(dbPath string) Store {
 		is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 	);`
 
-	_, err = db.ExecContext(context.Background(), initialQuery)
+	_, err := store.db.ExecContext(context.Background(), initialQuery)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateDBStore(dbPath string) Store {
+	db, err := sql.Open("pgx", dbPath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if err != nil {
 		log.Fatal(err)
@@ -211,11 +219,19 @@ func CreateDBStore(dbPath string) Store {
 		log.Fatal(err)
 	}
 
-	return &DBStore{
+	store := &DBStore{
 		db:          db,
 		insertQuery: insertQuery,
 		deleteQuery: deleteQuery,
 	}
+
+	err = store.createTable()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return store
 }
 
 func CloseConnection(db *sql.DB) {
