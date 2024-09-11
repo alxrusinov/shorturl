@@ -25,6 +25,17 @@ func Run(config *config.Config) {
 		}
 	}()
 
+	go func() {
+		var batch [][]store.StoreRecord
+
+		for val := range handler.DeleteChan {
+			batch = append(batch, val)
+			sStore.DeleteLinks(batch)
+
+			batch = batch[0:0]
+		}
+	}()
+
 	newServer.Run()
 
 }

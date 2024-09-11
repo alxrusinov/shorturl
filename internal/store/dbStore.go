@@ -146,8 +146,8 @@ func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
 
 	defer tx.Rollback()
 
-	preparedShorts := make([]string, len(shorts))
-	preparedIDs := make([]string, len(shorts))
+	preparedShorts := []string{}
+	preparedIDs := []string{}
 
 	for _, val := range shorts {
 		userID := val[0].UUID
@@ -216,7 +216,7 @@ func CreateDBStore(dbPath string) Store {
 				RETURNING short, original, correlation_id, user_id;
 				`
 
-	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id in ($1) and short IN ($2)`
+	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id IN ($1) and short IN ($2);`
 
 	insertQuery, err := db.Prepare(insertQueryString)
 
