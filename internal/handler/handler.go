@@ -3,10 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
-	"sync"
 
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/store"
@@ -21,6 +19,7 @@ type Handler struct {
 	store       store.Store
 	options     *options
 	Middlewares *Middlewares
+	DeleteChan  chan []store.StoreRecord
 }
 
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
@@ -29,7 +28,6 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	val, ok := ctx.Get("userID")
 
 	if !ok {
-		fmt.Printf("FOO\n")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
@@ -37,7 +35,6 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	userID, ok = val.(string)
 
 	if !ok {
-		fmt.Printf("FOO 2\n")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
@@ -45,7 +42,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	body, _ := io.ReadAll(ctx.Request.Body)
 	originURL := string(body)
 
-	shortenURL, err := generator.GenerateRandomString(10)
+	shortenURL, err := generator.GenerateRandomString()
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
@@ -137,7 +134,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	shortenURL, err := generator.GenerateRandomString(10)
+	shortenURL, err := generator.GenerateRandomString()
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
@@ -223,7 +220,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	defer ctx.Request.Body.Close()
 
 	for _, val := range content {
-		shortenURL, err := generator.GenerateRandomString(10)
+		shortenURL, err := generator.GenerateRandomString()
 
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
@@ -340,40 +337,27 @@ func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	var wg sync.WaitGroup
-	workersNum := 3
-	chunks := shortsChunk(shorts, 3)
-	chunksCh := make(chan []string, len(chunks))
+	var batch []store.StoreRecord
 
-	for i := 0; i < workersNum; i++ {
-		wg.Add(1)
-
-		go func(chunksCh chan []string, wg *sync.WaitGroup) {
-
-			for chunk := range chunksCh {
-				err := handler.store.DeleteLinks(userID, chunk)
-				fmt.Printf("%#v", err)
-			}
-
-			wg.Done()
-
-		}(chunksCh, &wg)
+	for _, val := range shorts {
+		batch = append(batch, store.StoreRecord{
+			UUID:      userID,
+			ShortLink: val,
+		})
 	}
 
-	for _, chunk := range chunks {
-		chunksCh <- chunk
-	}
+	handler.DeleteChan <- batch
 
-	wg.Wait()
 	ctx.Status(http.StatusAccepted)
 }
 
-func CreateHandler(store store.Store, responseAddr string) *Handler {
+func CreateHandler(sStore store.Store, responseAddr string) *Handler {
 	handler := &Handler{
-		store: store,
+		store: sStore,
 		options: &options{
 			responseAddr: responseAddr,
 		},
+		DeleteChan: make(chan []store.StoreRecord),
 	}
 
 	return handler

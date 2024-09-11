@@ -141,7 +141,7 @@ func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
 
 }
 
-func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
+func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
 	tx, err := store.db.Begin()
 
 	if err != nil {
@@ -150,7 +150,20 @@ func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
 
 	defer tx.Rollback()
 
-	placeholders := strings.Join(shorts, ", ")
+	preparedShorts := make([]string, len(shorts))
+	preparedIDs := make([]string, len(shorts))
+
+	for _, val := range shorts {
+		userID := val[0].UUID
+		preparedIDs = append(preparedIDs, userID)
+
+		for _, shortLink := range val {
+			preparedShorts = append(preparedShorts, shortLink.ShortLink)
+		}
+	}
+
+	shortsPlaceholders := strings.Join(preparedShorts, ", ")
+	userIDsPlaceholders := strings.Join(preparedIDs, ", ")
 
 	stmt := tx.Stmt(store.deleteQuery)
 
@@ -160,7 +173,7 @@ func (store *DBStore) DeleteLinks(userID string, shorts []string) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(context.Background(), userID, placeholders)
+	_, err = stmt.ExecContext(context.Background(), userIDsPlaceholders, shortsPlaceholders)
 
 	if err != nil {
 		return err
@@ -205,7 +218,7 @@ func CreateDBStore(dbPath string) Store {
 				RETURNING short, original, correlation_id, user_id;
 				`
 
-	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id = $1 and short IN ($2)`
+	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id in ($1) and short IN ($2)`
 
 	insertQuery, err := db.Prepare(insertQueryString)
 
