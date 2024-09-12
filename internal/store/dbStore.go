@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"io"
 	"log"
 	"strings"
@@ -144,30 +145,27 @@ func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
 		return err
 	}
 
-	defer tx.Rollback()
+	defer tx.Commit()
 
 	preparedShorts := []string{}
 	preparedIDs := []string{}
 
 	for _, val := range shorts {
 		userID := val[0].UUID
-		preparedIDs = append(preparedIDs, userID)
+		preparedIDs = append(preparedIDs, fmt.Sprint("'"+userID+"'"))
 
 		for _, shortLink := range val {
-			preparedShorts = append(preparedShorts, shortLink.ShortLink)
+			preparedShorts = append(preparedShorts, fmt.Sprint("'"+shortLink.ShortLink+"'"))
 		}
 	}
 
 	shortsPlaceholders := strings.Join(preparedShorts, ", ")
 	userIDsPlaceholders := strings.Join(preparedIDs, ", ")
 
-	stmt := tx.Stmt(store.deleteQuery)
-
-	defer stmt.Close()
-
-	_, err = stmt.ExecContext(context.Background(), userIDsPlaceholders, shortsPlaceholders)
+	_, err = tx.QueryContext(context.Background(), `UPDATE links SET is_deleted = TRUE WHERE user_id = ANY(ARRAY[`+userIDsPlaceholders+`]) and short = ANY(ARRAY[`+shortsPlaceholders+`]) RETURNING id;`)
 
 	if err != nil {
+		fmt.Printf("err query: %v\n", err)
 		return err
 	}
 
@@ -216,21 +214,12 @@ func CreateDBStore(dbPath string) Store {
 				RETURNING short, original, correlation_id, user_id;
 				`
 
-	deleteQueryString := `UPDATE links SET is_deleted = TRUE WHERE user_id IN ($1) and short IN ($2);`
-
 	insertQuery, err := db.Prepare(insertQueryString)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	deleteQuery, err := db.Prepare(deleteQueryString)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	store.deleteQuery = deleteQuery
 	store.insertQuery = insertQuery
 
 	return store
