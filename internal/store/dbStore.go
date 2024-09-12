@@ -162,10 +162,13 @@ func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
 	shortsPlaceholders := strings.Join(preparedShorts, ", ")
 	userIDsPlaceholders := strings.Join(preparedIDs, ", ")
 
-	_, err = tx.QueryContext(context.Background(), `UPDATE links SET is_deleted = TRUE WHERE user_id = ANY(ARRAY[`+userIDsPlaceholders+`]) and short = ANY(ARRAY[`+shortsPlaceholders+`]) RETURNING id;`)
+	rows, err := tx.QueryContext(context.Background(), `UPDATE links SET is_deleted = TRUE WHERE user_id = ANY(ARRAY[`+userIDsPlaceholders+`]) and short = ANY(ARRAY[`+shortsPlaceholders+`]) RETURNING id;`)
 
 	if err != nil {
-		fmt.Printf("err query: %v\n", err)
+		return err
+	}
+
+	if err = rows.Err(); err != nil {
 		return err
 	}
 
