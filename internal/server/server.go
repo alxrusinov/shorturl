@@ -23,9 +23,11 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 		addr:    addr,
 	}
 
-	server.mux.Use(loggerMiddleware(logger))
+	server.mux.Use(server.handler.Middlewares.LoggerMiddleware(logger))
 
-	server.mux.Use(compressMiddleware())
+	server.mux.Use(server.handler.Middlewares.CompressMiddleware())
+
+	server.mux.Use(server.handler.Middlewares.CookieMiddleware())
 
 	server.mux.POST("/", server.handler.GetShortLink)
 
@@ -36,6 +38,10 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 	server.mux.GET("/ping", server.handler.Ping)
 
 	server.mux.POST("/api/shorten/batch", server.handler.APIShortenBatch)
+
+	server.mux.GET("/api/user/urls", server.handler.GetUserLinks)
+
+	server.mux.DELETE("/api/user/urls", server.handler.APIDeleteLinks)
 
 	return server
 }

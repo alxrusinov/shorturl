@@ -1,18 +1,43 @@
 package generator
 
 import (
-	"math/rand"
-	"time"
+	"crypto/md5"
+	"crypto/rand"
+	"encoding/base64"
 )
 
-func GenerateRandomString(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	seed := rand.NewSource(time.Now().UnixNano())
-	random := rand.New(seed)
+func GenerateRandomString() (string, error) {
+	data := make([]byte, 512)
 
-	result := make([]byte, length)
-	for i := range result {
-		result[i] = charset[random.Intn(len(charset))]
+	_, err := rand.Read(data)
+
+	if err != nil {
+		return "", err
 	}
-	return string(result)
+
+	h := md5.New()
+
+	h.Write(data)
+
+	hash := base64.URLEncoding.EncodeToString(h.Sum(nil))
+
+	return hash, nil
+}
+
+func GenerateUserID() (string, error) {
+	data := make([]byte, 512)
+
+	_, err := rand.Read(data)
+
+	if err != nil {
+		return "", err
+	}
+
+	h := md5.New()
+
+	h.Write(data)
+
+	hash := base64.URLEncoding.EncodeToString(h.Sum(nil))
+
+	return hash, nil
 }

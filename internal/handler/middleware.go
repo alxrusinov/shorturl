@@ -1,4 +1,4 @@
-package server
+package handler
 
 import (
 	"compress/gzip"
@@ -6,9 +6,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 )
+
+type Middlewares struct{}
+
+const UserCookie = "user_cookie"
 
 func checkContentType(values []string) bool {
 	var zippingContentType = map[string]struct{}{"text/html": {}, "application/json": {}}
@@ -49,7 +54,7 @@ func (g *gzipWriter) WriteHeader(code int) {
 	g.ResponseWriter.WriteHeader(code)
 }
 
-func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
+func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 
@@ -68,7 +73,7 @@ func loggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	}
 }
 
-func compressMiddleware() gin.HandlerFunc {
+func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		contentEncoding := c.Request.Header.Values("Content-Encoding")
 		acceptEncoding := c.Request.Header.Values("Accept-Encoding")
@@ -101,6 +106,68 @@ func compressMiddleware() gin.HandlerFunc {
 			gz := gzip.NewWriter(c.Writer)
 			c.Writer.Header().Set("Content-Encoding", "gzip")
 			c.Writer = &gzipWriter{c.Writer, gz}
+		}
+
+	}
+}
+
+func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fullPath := c.FullPath()
+		method := c.Request.Method
+
+		if method == http.MethodPost {
+			userID, err := c.Cookie(UserCookie)
+
+			if err != nil {
+				userID, err = generator.GenerateUserID()
+
+				if err != nil {
+					c.AbortWithStatus(http.StatusInternalServerError)
+					return
+				}
+
+				c.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
+
+			}
+
+			c.Set("userID", userID)
+
+			c.Next()
+
+			return
+		}
+
+		if method == http.MethodGet {
+			if fullPath == "/api/user/urls" {
+				userID, err := c.Cookie(UserCookie)
+
+				if err != nil {
+					c.AbortWithStatus(http.StatusUnauthorized)
+					return
+				}
+
+				c.Set("userID", userID)
+			}
+
+			c.Next()
+
+			return
+		}
+
+		if method == http.MethodDelete {
+			userID, err := c.Cookie(UserCookie)
+
+			if err != nil {
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
+
+			c.Set("userID", userID)
+
+			c.Next()
+
+			return
 		}
 
 	}

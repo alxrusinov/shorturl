@@ -23,7 +23,7 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 	router.GET("/:id", testHandler.GetOriginalLink)
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink:    "abcde",
 		OriginalLink: "http://example.com",
 	}
@@ -74,6 +74,8 @@ func TestHandler_GetShortLink(t *testing.T) {
 	testHandler := CreateHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
+	router.Use(testHandler.Middlewares.CookieMiddleware())
+
 	router.POST("/", testHandler.GetShortLink)
 
 	type want struct {
@@ -121,6 +123,8 @@ func TestHandler_APIShorten(t *testing.T) {
 	testStore := store.CreateInMemoryStore()
 	testHandler := CreateHandler(testStore, "http://localhost:8080")
 	router := gin.New()
+
+	router.Use(testHandler.Middlewares.CookieMiddleware())
 
 	router.POST("/api/shorten", testHandler.APIShorten)
 

@@ -5,16 +5,20 @@ import (
 )
 
 type Store interface {
-	GetLink(arg *StoreArgs) (*StoreArgs, error)
-	SetLink(arg *StoreArgs) (*StoreArgs, error)
-	SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error)
+	GetLink(arg *StoreRecord) (*StoreRecord, error)
+	SetLink(arg *StoreRecord) (*StoreRecord, error)
+	SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 	Ping() error
+	GetLinks(userID string) ([]StoreRecord, error)
+	DeleteLinks(shorts [][]StoreRecord) error
 }
 
-type StoreArgs struct {
-	ShortLink     string `json:"short_url,omitempty"`
-	OriginalLink  string `json:"original_url,omitempty"`
-	CorrelationID string `json:"correlation_id"`
+type StoreRecord struct {
+	UUID          string `json:"user_id" db:"user_id"`
+	ShortLink     string `json:"short_url,omitempty" db:"short"`
+	OriginalLink  string `json:"original_url,omitempty" db:"original"`
+	CorrelationID string `json:"correlation_id" db:"correlation_id"`
+	Deleted       bool   `json:"is_deleted" db:"is_deleted"`
 }
 
 func CreateStore(config *config.Config) Store {

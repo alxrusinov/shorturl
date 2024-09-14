@@ -3,8 +3,10 @@ package store
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"io"
 	"log"
+	"strings"
 
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -13,12 +15,14 @@ import (
 )
 
 type DBStore struct {
-	db *sql.DB
+	db          *sql.DB
+	deleteQuery *sql.Stmt
+	insertQuery *sql.Stmt
 }
 
-func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *DBStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var s string
-	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1", arg.ShortLink).Scan(&s)
+	err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1 and is_deleted = FALSE", arg.ShortLink).Scan(&s)
 
 	if err != nil {
 		return nil, err
@@ -29,15 +33,15 @@ func (store *DBStore) GetLink(arg *StoreArgs) (*StoreArgs, error) {
 	return arg, nil
 }
 
-func (store *DBStore) SetLink(arg *StoreArgs) (*StoreArgs, error) {
+func (store *DBStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	var err error
-	dbQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3);
+	dbQuery := `INSERT INTO links (short, original, correlation_id, user_id)
+				VALUES ($1, $2, $3, $4);
 				`
 
 	selectQuery := `SELECT short FROM links WHERE original = $1 `
 
-	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID)
+	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID, arg.UUID)
 
 	if err != nil {
 		if dbErr, ok := err.(*pgconn.PgError); ok {
@@ -68,7 +72,7 @@ func (store *DBStore) Ping() error {
 	return nil
 }
 
-func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
+func (store *DBStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
 	tx, err := store.db.Begin()
 
 	if err != nil {
@@ -77,24 +81,15 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 
 	defer tx.Rollback()
 
-	insertQuery := `INSERT INTO links (short, original, correlation_id)
-				VALUES ($1, $2, $3)
-				RETURNING short, original, correlation_id;
-				`
-
-	stmt, err := tx.Prepare(insertQuery)
-
-	if err != nil {
-		return nil, err
-	}
+	stmt := tx.Stmt(store.insertQuery)
 
 	defer stmt.Close()
 
-	response := make([]*StoreArgs, 0)
+	response := make([]*StoreRecord, 0)
 
 	for _, val := range arg {
-		res := &StoreArgs{}
-		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID)
+		res := &StoreRecord{}
+		err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID, val.UUID).Scan(&res.ShortLink, &res.OriginalLink, &res.CorrelationID, &res.UUID)
 
 		if err != nil && !errors.Is(err, io.EOF) {
 			return nil, err
@@ -113,29 +108,124 @@ func (store *DBStore) SetBatchLink(arg []*StoreArgs) ([]*StoreArgs, error) {
 	return response, nil
 }
 
+func (store *DBStore) GetLinks(userID string) ([]StoreRecord, error) {
+	rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted FROM links WHERE user_id = $1", userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var result []StoreRecord
+
+	for rows.Next() {
+		var row StoreRecord
+
+		if err := rows.Scan(&row.UUID, &row.ShortLink, &row.OriginalLink, &row.CorrelationID, &row.Deleted); err != nil {
+			return nil, err
+		}
+
+		result = append(result, row)
+
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
+func (store *DBStore) DeleteLinks(shorts [][]StoreRecord) error {
+	tx, err := store.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer tx.Commit()
+
+	preparedShorts := []string{}
+	preparedIDs := []string{}
+
+	for _, val := range shorts {
+		userID := val[0].UUID
+		preparedIDs = append(preparedIDs, fmt.Sprint("'"+userID+"'"))
+
+		for _, shortLink := range val {
+			preparedShorts = append(preparedShorts, fmt.Sprint("'"+shortLink.ShortLink+"'"))
+		}
+	}
+
+	shortsPlaceholders := strings.Join(preparedShorts, ", ")
+	userIDsPlaceholders := strings.Join(preparedIDs, ", ")
+
+	rows, err := tx.QueryContext(context.Background(), `UPDATE links SET is_deleted = TRUE WHERE user_id = ANY(ARRAY[`+userIDsPlaceholders+`]) and short = ANY(ARRAY[`+shortsPlaceholders+`]) RETURNING id;`)
+
+	if err != nil {
+		return err
+	}
+
+	if err = rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (store *DBStore) createTable() error {
+	initialQuery := `CREATE TABLE IF NOT EXISTS links (
+		id SERIAL PRIMARY KEY,
+		user_id TEXT,
+		short TEXT,
+		original TEXT UNIQUE,
+		correlation_id TEXT,
+		is_deleted BOOLEAN NOT NULL DEFAULT FALSE
+	);`
+
+	_, err := store.db.ExecContext(context.Background(), initialQuery)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func CreateDBStore(dbPath string) Store {
+	store := &DBStore{}
+
 	db, err := sql.Open("pgx", dbPath)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	initialQuery := `CREATE TABLE IF NOT EXISTS links (
-		id SERIAL PRIMARY KEY,
-		short TEXT,
-		original TEXT UNIQUE,
-		correlation_id TEXT
-	);`
+	store.db = db
 
-	_, err = db.ExecContext(context.Background(), initialQuery)
+	err = store.createTable()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return &DBStore{
-		db: db,
+	insertQueryString := `INSERT INTO links (short, original, correlation_id, user_id)
+				VALUES ($1, $2, $3, $4)
+				RETURNING short, original, correlation_id, user_id;
+				`
+
+	insertQuery, err := db.Prepare(insertQueryString)
+
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	store.insertQuery = insertQuery
+
+	return store
 }
 
 func CloseConnection(db *sql.DB) {

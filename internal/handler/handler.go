@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -17,19 +16,43 @@ type options struct {
 }
 
 type Handler struct {
-	store   store.Store
-	options *options
+	store       store.Store
+	options     *options
+	Middlewares *Middlewares
+	DeleteChan  chan []store.StoreRecord
 }
 
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
+	var userID string
+
+	val, ok := ctx.Get("userID")
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok = val.(string)
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
 	body, _ := io.ReadAll(ctx.Request.Body)
 	originURL := string(body)
 
-	shortenURL := generator.GenerateRandomString(10)
+	shortenURL, err := generator.GenerateRandomString()
 
-	links := &store.StoreArgs{
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: originURL,
+		UUID:         userID,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -48,7 +71,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	resp := []byte(fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink))
+	resp := []byte(createShortLink(handler.options.responseAddr, links.ShortLink))
 
 	if dbErr.Err != nil {
 		ctx.Data(http.StatusConflict, "text/plain", resp)
@@ -62,14 +85,14 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 	id := ctx.Param("id")
 	defer ctx.Request.Body.Close()
 
-	links := &store.StoreArgs{
+	links := &store.StoreRecord{
 		ShortLink: id,
 	}
 
 	res, err := handler.store.GetLink(links)
 
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.Status(http.StatusGone)
 		return
 	}
 
@@ -78,6 +101,22 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShorten(ctx *gin.Context) {
+	var userID string
+
+	val, ok := ctx.Get("userID")
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok = val.(string)
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
 	content := struct {
 		URL string `json:"url"`
 	}{}
@@ -95,11 +134,17 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	defer ctx.Request.Body.Close()
 
-	shortenURL = generator.GenerateRandomString(10)
+	shortenURL, err := generator.GenerateRandomString()
 
-	links := &store.StoreArgs{
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	links := &store.StoreRecord{
 		ShortLink:    shortenURL,
 		OriginalLink: content.URL,
+		UUID:         userID,
 	}
 
 	res, err := handler.store.SetLink(links)
@@ -118,7 +163,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	links.ShortLink = res.ShortLink
 
-	result.Result = fmt.Sprintf("%s/%s", handler.options.responseAddr, links.ShortLink)
+	result.Result = createShortLink(handler.options.responseAddr, links.ShortLink)
 
 	resp, err := json.Marshal(&result)
 
@@ -149,7 +194,23 @@ func (handler *Handler) Ping(ctx *gin.Context) {
 }
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
-	var content []*store.StoreArgs
+	var userID string
+
+	val, ok := ctx.Get("userID")
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok = val.(string)
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	var content []*store.StoreRecord
 
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
 		ctx.AbortWithStatus(http.StatusNotFound)
@@ -159,8 +220,15 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	defer ctx.Request.Body.Close()
 
 	for _, val := range content {
-		shortenURL := generator.GenerateRandomString(10)
+		shortenURL, err := generator.GenerateRandomString()
+
+		if err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
 		val.ShortLink = shortenURL
+		val.UUID = userID
 	}
 
 	result, err := handler.store.SetBatchLink(content)
@@ -171,7 +239,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	}
 
 	for _, val := range result {
-		val.ShortLink = fmt.Sprintf("%s/%s", handler.options.responseAddr, val.ShortLink)
+		val.ShortLink = createShortLink(handler.options.responseAddr, val.ShortLink)
 		val.OriginalLink = ""
 	}
 
@@ -186,12 +254,110 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 
 }
 
-func CreateHandler(store store.Store, responseAddr string) *Handler {
+func (handler *Handler) GetUserLinks(ctx *gin.Context) {
+	var userID string
+
+	val, ok := ctx.Get("userID")
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok = val.(string)
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	links, err := handler.store.GetLinks(userID)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if len(links) == 0 {
+		ctx.Header("Content-Type", "application/json")
+		ctx.Status(http.StatusNoContent)
+		return
+	}
+
+	var result []struct {
+		Short    string `json:"short_url"`
+		Original string `json:"original_url"`
+	}
+
+	for _, link := range links {
+		newLink := struct {
+			Short    string `json:"short_url"`
+			Original string `json:"original_url"`
+		}{
+			Short:    createShortLink(handler.options.responseAddr, link.ShortLink),
+			Original: link.OriginalLink,
+		}
+		result = append(result, newLink)
+	}
+
+	resp, err := json.Marshal(&result)
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.Data(http.StatusOK, "application/json", resp)
+
+}
+
+func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {
+	var userID string
+
+	val, ok := ctx.Get("userID")
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	userID, ok = val.(string)
+
+	if !ok {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	var shorts []string
+
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&shorts); err != nil && !errors.Is(err, io.EOF) {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	defer ctx.Request.Body.Close()
+
+	var batch []store.StoreRecord
+
+	for _, val := range shorts {
+		batch = append(batch, store.StoreRecord{
+			UUID:      userID,
+			ShortLink: val,
+		})
+	}
+
+	handler.DeleteChan <- batch
+
+	ctx.Status(http.StatusAccepted)
+}
+
+func CreateHandler(sStore store.Store, responseAddr string) *Handler {
 	handler := &Handler{
-		store: store,
+		store: sStore,
 		options: &options{
 			responseAddr: responseAddr,
 		},
+		DeleteChan: make(chan []store.StoreRecord),
 	}
 
 	return handler

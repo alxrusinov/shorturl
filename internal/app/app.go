@@ -9,10 +9,32 @@ import (
 )
 
 func Run(config *config.Config) {
-	store := store.CreateStore(config)
-	handler := handler.CreateHandler(store, config.ResponseURL)
+	sStore := store.CreateStore(config)
+	handler := handler.CreateHandler(sStore, config.ResponseURL)
 	logger := logger.CreateLogger()
 	newServer := server.CreateServer(handler, config.BaseURL, logger)
+
+	go func() {
+		var batch [][]store.StoreRecord
+
+		for val := range handler.DeleteChan {
+			batch = append(batch, val)
+			sStore.DeleteLinks(batch)
+
+			batch = batch[0:0]
+		}
+	}()
+
+	go func() {
+		var batch [][]store.StoreRecord
+
+		for val := range handler.DeleteChan {
+			batch = append(batch, val)
+			sStore.DeleteLinks(batch)
+
+			batch = batch[0:0]
+		}
+	}()
 
 	newServer.Run()
 
