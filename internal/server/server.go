@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/alxrusinov/shorturl/internal/handler"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 )
@@ -16,7 +17,7 @@ func (server *Server) Run() {
 	server.mux.Run(server.addr)
 }
 
-func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server {
+func NewServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server {
 	server := &Server{
 		mux:     gin.New(),
 		handler: handler,
@@ -42,6 +43,8 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 	server.mux.GET("/api/user/urls", server.handler.GetUserLinks)
 
 	server.mux.DELETE("/api/user/urls", server.handler.APIDeleteLinks)
+
+	pprof.Register(server.mux)
 
 	return server
 }

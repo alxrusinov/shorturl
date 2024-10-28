@@ -1,4 +1,4 @@
-package store
+package customerrors
 
 type DuplicateValueError struct {
 	Err error

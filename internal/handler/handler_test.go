@@ -9,7 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alxrusinov/shorturl/internal/store"
+	"github.com/alxrusinov/shorturl/internal/model"
+	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,13 +18,13 @@ import (
 
 func TestHandler_GetOriginalLink(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateInMemoryStore()
-	testHandler := CreateHandler(testStore, "http://localhost:8080")
+	testStore := inmemorystore.NewInMemoryStore()
+	testHandler := NewHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
 	router.GET("/:id", testHandler.GetOriginalLink)
 
-	links := &store.StoreRecord{
+	links := &model.StoreRecord{
 		ShortLink:    "abcde",
 		OriginalLink: "http://example.com",
 	}
@@ -70,8 +71,8 @@ func TestHandler_GetOriginalLink(t *testing.T) {
 
 func TestHandler_GetShortLink(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateInMemoryStore()
-	testHandler := CreateHandler(testStore, "http://localhost:8080")
+	testStore := inmemorystore.NewInMemoryStore()
+	testHandler := NewHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
 	router.Use(testHandler.Middlewares.CookieMiddleware())
@@ -120,8 +121,8 @@ func TestHandler_GetShortLink(t *testing.T) {
 
 func TestHandler_APIShorten(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	testStore := store.CreateInMemoryStore()
-	testHandler := CreateHandler(testStore, "http://localhost:8080")
+	testStore := inmemorystore.NewInMemoryStore()
+	testHandler := NewHandler(testStore, "http://localhost:8080")
 	router := gin.New()
 
 	router.Use(testHandler.Middlewares.CookieMiddleware())

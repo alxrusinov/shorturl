@@ -6,7 +6,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func CreateLogger() zerolog.Logger {
+func NewLogger() zerolog.Logger {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	logger := zerolog.New(os.Stdout)
 

@@ -1,4 +1,4 @@
-package store
+package filestore
 
 import (
 	"bufio"
@@ -6,6 +6,8 @@ import (
 	"errors"
 	"os"
 
+	"github.com/alxrusinov/shorturl/internal/customerrors"
+	"github.com/alxrusinov/shorturl/internal/model"
 	"github.com/google/uuid"
 )
 
@@ -13,7 +15,7 @@ type FileStore struct {
 	filePath string
 }
 
-func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
+func (store *FileStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -25,7 +27,7 @@ func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		record := &StoreRecord{}
+		record := &model.StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && record.ShortLink == arg.ShortLink {
 			arg.OriginalLink = record.OriginalLink
@@ -40,7 +42,7 @@ func (store *FileStore) GetLink(arg *StoreRecord) (*StoreRecord, error) {
 	return nil, errors.New("not found")
 }
 
-func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
+func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -50,11 +52,11 @@ func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		record := &StoreRecord{}
+		record := &model.StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && record.OriginalLink == arg.OriginalLink {
 			arg.OriginalLink = record.OriginalLink
-			return arg, &DuplicateValueError{Err: errors.New("record already exists")}
+			return arg, &customerrors.DuplicateValueError{Err: errors.New("record already exists")}
 		}
 	}
 
@@ -64,7 +66,7 @@ func (store *FileStore) SetLink(arg *StoreRecord) (*StoreRecord, error) {
 
 	newUUID := uuid.NewString()
 
-	record := &StoreRecord{
+	record := &model.StoreRecord{
 		UUID:          newUUID,
 		CorrelationID: arg.CorrelationID,
 		OriginalLink:  arg.OriginalLink,
@@ -101,7 +103,7 @@ func (store *FileStore) Ping() error {
 	return file.Close()
 }
 
-func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error) {
+func (store *FileStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -112,7 +114,7 @@ func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 
 	for _, val := range arg {
 
-		record := &StoreRecord{
+		record := &model.StoreRecord{
 			UUID:          newUUID,
 			CorrelationID: val.CorrelationID,
 			OriginalLink:  val.OriginalLink,
@@ -143,7 +145,7 @@ func (store *FileStore) SetBatchLink(arg []*StoreRecord) ([]*StoreRecord, error)
 
 }
 
-func (store *FileStore) GetLinks(userID string) ([]StoreRecord, error) {
+func (store *FileStore) GetLinks(userID string) ([]model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
 	if err != nil {
@@ -154,10 +156,10 @@ func (store *FileStore) GetLinks(userID string) ([]StoreRecord, error) {
 
 	scanner := bufio.NewScanner(file)
 
-	var result []StoreRecord
+	var result []model.StoreRecord
 
 	for scanner.Scan() {
-		record := &StoreRecord{}
+		record := &model.StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && userID == record.UUID {
 			result = append(result, *record)
@@ -172,7 +174,7 @@ func (store *FileStore) GetLinks(userID string) ([]StoreRecord, error) {
 
 }
 
-func (store *FileStore) DeleteLinks(shorts [][]StoreRecord) error {
+func (store *FileStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE, 0666)
 
 	if err != nil {
@@ -181,7 +183,7 @@ func (store *FileStore) DeleteLinks(shorts [][]StoreRecord) error {
 
 	defer file.Close()
 
-	var preparedShorts []StoreRecord
+	var preparedShorts []model.StoreRecord
 
 	for _, val := range shorts {
 		preparedShorts = append(preparedShorts, val...)
@@ -189,10 +191,10 @@ func (store *FileStore) DeleteLinks(shorts [][]StoreRecord) error {
 
 	scanner := bufio.NewScanner(file)
 
-	var result []StoreRecord
+	var result []model.StoreRecord
 
 	for scanner.Scan() {
-		record := &StoreRecord{}
+		record := &model.StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 
 		if err == nil {
@@ -227,7 +229,7 @@ func (store *FileStore) DeleteLinks(shorts [][]StoreRecord) error {
 
 }
 
-func CreateFileStore(filePath string) Store {
+func NewFileStore(filePath string) *FileStore {
 	store := &FileStore{filePath: filePath}
 
 	return store
