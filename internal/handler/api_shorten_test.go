@@ -7,8 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 	"github.com/gin-gonic/gin"
+
+	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 )
 
 func BenchmarkAPIShorten(b *testing.B) {

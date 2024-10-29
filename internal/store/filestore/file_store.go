@@ -6,9 +6,10 @@ import (
 	"errors"
 	"os"
 
+	"github.com/google/uuid"
+
 	"github.com/alxrusinov/shorturl/internal/customerrors"
 	"github.com/alxrusinov/shorturl/internal/model"
-	"github.com/google/uuid"
 )
 
 type FileStore struct {

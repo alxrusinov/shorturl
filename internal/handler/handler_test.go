@@ -9,11 +9,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alxrusinov/shorturl/internal/model"
-	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/alxrusinov/shorturl/internal/model"
+	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 )
 
 func TestHandler_GetOriginalLink(t *testing.T) {

@@ -6,8 +6,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/alxrusinov/shorturl/internal/model"
 	"github.com/gin-gonic/gin"
+
+	"github.com/alxrusinov/shorturl/internal/model"
 )
 
 func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {

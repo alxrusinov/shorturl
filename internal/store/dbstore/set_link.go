@@ -3,10 +3,11 @@ package dbstore
 import (
 	"context"
 
-	"github.com/alxrusinov/shorturl/internal/customerrors"
-	"github.com/alxrusinov/shorturl/internal/model"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
+
+	"github.com/alxrusinov/shorturl/internal/customerrors"
+	"github.com/alxrusinov/shorturl/internal/model"
 )
 
 func (store *DBStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {

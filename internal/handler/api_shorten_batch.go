@@ -6,9 +6,10 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/model"
-	"github.com/gin-gonic/gin"
 )
 
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {

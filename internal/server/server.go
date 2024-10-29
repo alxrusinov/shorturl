@@ -1,10 +1,11 @@
 package server
 
 import (
-	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+
+	"github.com/alxrusinov/shorturl/internal/handler"
 )
 
 type Server struct {

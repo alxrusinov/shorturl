@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+
+	"github.com/alxrusinov/shorturl/internal/generator"
 )
 
 type Middlewares struct{}

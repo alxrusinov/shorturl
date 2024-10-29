@@ -6,11 +6,12 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/buger/jsonparser"
+	"github.com/gin-gonic/gin"
+
 	"github.com/alxrusinov/shorturl/internal/customerrors"
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/model"
-	"github.com/buger/jsonparser"
-	"github.com/gin-gonic/gin"
 )
 
 func (handler *Handler) APIShorten(ctx *gin.Context) {
