@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetUserLinks - route reteurn all users urls
+// /api/user/urls
 func (handler *Handler) GetUserLinks(ctx *gin.Context) {
 	var userID string
 

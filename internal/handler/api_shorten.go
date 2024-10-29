@@ -14,6 +14,8 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// APIShorten - route adds url
+// /api/shorten
 func (handler *Handler) APIShorten(ctx *gin.Context) {
 	var userID string
 

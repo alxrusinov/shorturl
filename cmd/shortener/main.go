@@ -5,14 +5,10 @@ import (
 	"github.com/alxrusinov/shorturl/internal/config"
 )
 
-var appConfig *config.Config = config.NewConfig()
-
-func init() {
-	appConfig.Init()
-}
-
 func main() {
-	appConfig.Parse()
+	config := config.NewConfig()
 
-	app.Run(appConfig)
+	config.Init()
+
+	app.Run(config)
 }

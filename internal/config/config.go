@@ -6,9 +6,12 @@ import (
 )
 
 const (
-	DeafaultBaseURL     = "localhost:8080"
+	// DeafaultBaseURL - base url when server will be started
+	DeafaultBaseURL = "localhost:8080"
+	// DeafaultResponseURL - base url of returning link
 	DeafaultResponseURL = "http://localhost:8080"
-	DefaultFilePath     = "./config.json"
+	// DefaultFilePath - path for storage file
+	DefaultFilePath = "./config.json"
 )
 
 // Config has infomation about configuration of app
@@ -19,16 +22,12 @@ type Config struct {
 	DBPath          string
 }
 
-// Init initials flags
+// Init parses flags and initial config
 func (config *Config) Init() {
 	flag.StringVar(&config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
 	flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
 	flag.StringVar(&config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
 	flag.StringVar(&config.DBPath, "d", "", "path to data base")
-}
-
-// Parse parses flags
-func (config *Config) Parse() {
 	flag.Parse()
 
 	if baseURL, ok := os.LookupEnv("SERVER_ADDRESS"); ok {

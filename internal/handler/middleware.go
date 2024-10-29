@@ -12,8 +12,10 @@ import (
 	"github.com/alxrusinov/shorturl/internal/generator"
 )
 
+// Middlewares - middlewares entity
 type Middlewares struct{}
 
+// UserCookie - const of name cookie for user id
 const UserCookie = "user_cookie"
 
 func checkContentType(values []string) bool {
@@ -38,6 +40,7 @@ func checkGzip(values []string) bool {
 	return false
 }
 
+// Middleware - type of middleware reurning gin handler function
 type Middleware func() gin.HandlerFunc
 
 type gzipWriter struct {
@@ -45,16 +48,19 @@ type gzipWriter struct {
 	writer *gzip.Writer
 }
 
+// Write implements interface of gin writer
 func (g *gzipWriter) Write(data []byte) (int, error) {
 	g.Header().Del("Content-Length")
 	return g.writer.Write(data)
 }
 
+// WriteHeader implements interface of gin writing header
 func (g *gzipWriter) WriteHeader(code int) {
 	g.Header().Del("Content-Length")
 	g.ResponseWriter.WriteHeader(code)
 }
 
+// LoggerMiddleware - middleware adds logger
 func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
@@ -74,6 +80,7 @@ func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.Handl
 	}
 }
 
+// CompressMiddleware - middleware adds compressing of contetnt
 func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		contentEncoding := c.Request.Header.Values("Content-Encoding")
@@ -112,6 +119,7 @@ func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 	}
 }
 
+// CookieMiddleware - middleware adds cookie
 func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fullPath := c.FullPath()

@@ -6,6 +6,7 @@ type options struct {
 	responseAddr string
 }
 
+// Handler - structure with information about handler entity
 type Handler struct {
 	store       Store
 	options     *options
@@ -13,6 +14,7 @@ type Handler struct {
 	DeleteChan  chan []model.StoreRecord
 }
 
+// Store - interface of store
 type Store interface {
 	GetLink(arg *model.StoreRecord) (*model.StoreRecord, error)
 	SetLink(arg *model.StoreRecord) (*model.StoreRecord, error)
@@ -22,6 +24,7 @@ type Store interface {
 	DeleteLinks(shorts [][]model.StoreRecord) error
 }
 
+// NewHandler returns new handler instance
 func NewHandler(sStore Store, responseAddr string) *Handler {
 	handler := &Handler{
 		store: sStore,

@@ -12,6 +12,8 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// APIShortenBatch - route adds urls by batch
+// /api/shorten/batch
 func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	var userID string
 

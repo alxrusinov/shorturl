@@ -11,6 +11,8 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// APIDeleteLinks - route for deleting links
+// /api/user/urls
 func (handler *Handler) APIDeleteLinks(ctx *gin.Context) {
 	var userID string
 

@@ -12,6 +12,8 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// GetShortLink - route adds url
+// /
 func (handler *Handler) GetShortLink(ctx *gin.Context) {
 	var userID string
 

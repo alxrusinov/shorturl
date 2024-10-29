@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Ping - handker for pinging store
 func (handler *Handler) Ping(ctx *gin.Context) {
 	err := handler.store.Ping()
 
