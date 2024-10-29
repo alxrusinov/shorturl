@@ -10,6 +10,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// SetLink adds link to data base
 func (store *DBStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	var err error
 	dbQuery := `INSERT INTO links (short, original, correlation_id, user_id)

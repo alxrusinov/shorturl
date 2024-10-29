@@ -5,7 +5,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/config"
 )
 
-var appConfig *config.Config = config.CreateConfig()
+var appConfig *config.Config = config.NewConfig()
 
 func init() {
 	appConfig.Init()

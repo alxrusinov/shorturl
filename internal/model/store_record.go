@@ -1,5 +1,6 @@
 package model
 
+// StoreRecord has information about pair of original and shorten links and theri state
 type StoreRecord struct {
 	UUID          string `json:"user_id" db:"user_id"`
 	ShortLink     string `json:"short_url,omitempty" db:"short"`

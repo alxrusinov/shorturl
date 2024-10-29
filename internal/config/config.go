@@ -11,6 +11,7 @@ const (
 	DefaultFilePath     = "./config.json"
 )
 
+// Config has infomation about configuration of app
 type Config struct {
 	BaseURL         string
 	ResponseURL     string
@@ -18,6 +19,7 @@ type Config struct {
 	DBPath          string
 }
 
+// Init initials flags
 func (config *Config) Init() {
 	flag.StringVar(&config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
 	flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
@@ -25,6 +27,7 @@ func (config *Config) Init() {
 	flag.StringVar(&config.DBPath, "d", "", "path to data base")
 }
 
+// Parse parses flags
 func (config *Config) Parse() {
 	flag.Parse()
 
@@ -45,6 +48,7 @@ func (config *Config) Parse() {
 	}
 }
 
-func CreateConfig() *Config {
+// NewConfig return Config instance
+func NewConfig() *Config {
 	return &Config{}
 }

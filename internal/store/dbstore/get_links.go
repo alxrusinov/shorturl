@@ -6,6 +6,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// GetLinks returns information about all users links from data base
 func (store *DBStore) GetLinks(userID string) ([]model.StoreRecord, error) {
 	rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted FROM links WHERE user_id = $1", userID)
 

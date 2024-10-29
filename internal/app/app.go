@@ -11,6 +11,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 )
 
+// Run configurate and run application
 func Run(config *config.Config) {
 	var sStore handler.Store
 

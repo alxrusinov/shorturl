@@ -8,6 +8,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// DeleteLinks deletes links from data base
 func (store *DBStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	tx, err := store.db.Begin()
 

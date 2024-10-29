@@ -7,11 +7,13 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// DBStore implements Store interface for data base
 type DBStore struct {
 	db          *sql.DB
 	insertQuery *sql.Stmt
 }
 
+// NewDBStore initializes and returns data base store instance
 func NewDBStore(dbPath string) *DBStore {
 	store := &DBStore{}
 
@@ -45,6 +47,7 @@ func NewDBStore(dbPath string) *DBStore {
 	return store
 }
 
+// CloseConnection is a method closed db connection
 func CloseConnection(db *sql.DB) {
 	defer db.Close()
 

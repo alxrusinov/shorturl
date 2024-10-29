@@ -8,6 +8,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// SetBatchLink adds links to data base by batch
 func (store *DBStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) {
 	tx, err := store.db.Begin()
 

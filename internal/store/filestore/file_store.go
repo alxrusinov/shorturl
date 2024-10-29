@@ -12,10 +12,12 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// FileStore is variant of Store
 type FileStore struct {
 	filePath string
 }
 
+// GetLink returns original link by shorten
 func (store *FileStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
@@ -43,6 +45,7 @@ func (store *FileStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, err
 	return nil, errors.New("not found")
 }
 
+// SetLink add link to store
 func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
@@ -94,6 +97,7 @@ func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, err
 
 }
 
+// Ping pings file store
 func (store *FileStore) Ping() error {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
@@ -104,6 +108,7 @@ func (store *FileStore) Ping() error {
 	return file.Close()
 }
 
+// SetBatchLink adds links to file store by batch
 func (store *FileStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
@@ -146,6 +151,7 @@ func (store *FileStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRe
 
 }
 
+// GetLinks returns all users links from file store
 func (store *FileStore) GetLinks(userID string) ([]model.StoreRecord, error) {
 	file, err := os.OpenFile(store.filePath, os.O_RDONLY, 0666)
 
@@ -175,6 +181,7 @@ func (store *FileStore) GetLinks(userID string) ([]model.StoreRecord, error) {
 
 }
 
+// DeleteLinks deletes links from store by batch
 func (store *FileStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE, 0666)
 
@@ -230,6 +237,7 @@ func (store *FileStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 
 }
 
+// NewFileStore returns new instance of file store
 func NewFileStore(filePath string) *FileStore {
 	store := &FileStore{filePath: filePath}
 

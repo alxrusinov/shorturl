@@ -8,16 +8,19 @@ import (
 	"github.com/alxrusinov/shorturl/internal/handler"
 )
 
+// Server has information about server-mux, handler and server run address
 type Server struct {
 	mux     *gin.Engine
 	handler *handler.Handler
 	addr    string
 }
 
+// Run runs the server
 func (server *Server) Run() {
 	server.mux.Run(server.addr)
 }
 
+// NewServer initialize and return new server instance
 func NewServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server {
 	server := &Server{
 		mux:     gin.New(),
