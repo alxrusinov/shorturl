@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// Default fields for config
 const (
 	// DeafaultBaseURL - base url when server will be started
 	DeafaultBaseURL = "localhost:8080"
@@ -14,7 +15,7 @@ const (
 	DefaultFilePath = "./config.json"
 )
 
-// Config has infomation about configuration of app
+// Config has information about configuration of app
 type Config struct {
 	BaseURL         string
 	ResponseURL     string
