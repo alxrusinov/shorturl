@@ -9,6 +9,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/customerrors"
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/model"
+	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,22 +30,25 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 		return
 	}
 
-	content := struct {
-		URL string `json:"url"`
-	}{}
-
 	result := struct {
 		Result string `json:"result"`
 	}{}
 
-	var shortenURL string
+	body, err := io.ReadAll(ctx.Request.Body)
 
-	if err := json.NewDecoder(ctx.Request.Body).Decode(&content); err != nil && !errors.Is(err, io.EOF) {
-		ctx.AbortWithStatus(http.StatusNotFound)
+	defer ctx.Request.Body.Close()
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	defer ctx.Request.Body.Close()
+	originalLink, err := jsonparser.GetString(body, "url")
+
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
 	shortenURL, err := generator.GenerateRandomString()
 
@@ -55,7 +59,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 
 	links := &model.StoreRecord{
 		ShortLink:    shortenURL,
-		OriginalLink: content.URL,
+		OriginalLink: originalLink,
 		UUID:         userID,
 	}
 
