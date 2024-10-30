@@ -1,22 +1,27 @@
 package server
 
 import (
-	"github.com/alxrusinov/shorturl/internal/handler"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+
+	"github.com/alxrusinov/shorturl/internal/handler"
 )
 
+// Server has information about server-mux, handler and server run address
 type Server struct {
 	mux     *gin.Engine
 	handler *handler.Handler
 	addr    string
 }
 
+// Run runs the server
 func (server *Server) Run() {
 	server.mux.Run(server.addr)
 }
 
-func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server {
+// NewServer initialize and return new server instance
+func NewServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server {
 	server := &Server{
 		mux:     gin.New(),
 		handler: handler,
@@ -42,6 +47,8 @@ func CreateServer(handler *handler.Handler, addr string, logger zerolog.Logger) 
 	server.mux.GET("/api/user/urls", server.handler.GetUserLinks)
 
 	server.mux.DELETE("/api/user/urls", server.handler.APIDeleteLinks)
+
+	pprof.Register(server.mux)
 
 	return server
 }

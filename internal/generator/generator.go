@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 )
 
+// GenerateRandomString generate random string
 func GenerateRandomString() (string, error) {
 	data := make([]byte, 512)
 
@@ -24,6 +25,7 @@ func GenerateRandomString() (string, error) {
 	return hash, nil
 }
 
+// GenerateUserID return uaer ID as string
 func GenerateUserID() (string, error) {
 	data := make([]byte, 512)
 

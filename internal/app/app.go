@@ -4,18 +4,33 @@ import (
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/logger"
+	"github.com/alxrusinov/shorturl/internal/model"
 	"github.com/alxrusinov/shorturl/internal/server"
-	"github.com/alxrusinov/shorturl/internal/store"
+	"github.com/alxrusinov/shorturl/internal/store/dbstore"
+	"github.com/alxrusinov/shorturl/internal/store/filestore"
+	"github.com/alxrusinov/shorturl/internal/store/inmemorystore"
 )
 
+// Run configurate and run application
 func Run(config *config.Config) {
-	sStore := store.CreateStore(config)
-	handler := handler.CreateHandler(sStore, config.ResponseURL)
-	logger := logger.CreateLogger()
-	newServer := server.CreateServer(handler, config.BaseURL, logger)
+	var sStore handler.Store
+
+	switch {
+	case config.DBPath != "":
+		sStore = dbstore.NewDBStore(config.DBPath)
+	case config.FileStoragePath != "":
+		sStore = filestore.NewFileStore(config.FileStoragePath)
+	default:
+		sStore = inmemorystore.NewInMemoryStore()
+
+	}
+
+	handler := handler.NewHandler(sStore, config.ResponseURL)
+	logger := logger.NewLogger()
+	newServer := server.NewServer(handler, config.BaseURL, logger)
 
 	go func() {
-		var batch [][]store.StoreRecord
+		var batch [][]model.StoreRecord
 
 		for val := range handler.DeleteChan {
 			batch = append(batch, val)
@@ -26,7 +41,7 @@ func Run(config *config.Config) {
 	}()
 
 	go func() {
-		var batch [][]store.StoreRecord
+		var batch [][]model.StoreRecord
 
 		for val := range handler.DeleteChan {
 			batch = append(batch, val)
