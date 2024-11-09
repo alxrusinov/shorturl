@@ -11,4 +11,5 @@ func main() {
 	config.Init()
 
 	app.Run(config)
+
 }

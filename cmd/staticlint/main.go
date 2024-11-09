@@ -1,6 +1,8 @@
 package main
 
 import (
+	"go/ast"
+
 	"github.com/timakin/bodyclose/passes/bodyclose"
 	mnd "github.com/tommy-muehle/go-mnd"
 	"golang.org/x/tools/go/analysis"
@@ -34,7 +36,44 @@ import (
 	"honnef.co/go/tools/staticcheck"
 )
 
+func run(pass *analysis.Pass) (interface{}, error) {
+	for _, file := range pass.Files {
+		ast.Inspect(file, func(node ast.Node) bool {
+			switch x := node.(type) {
+			case *ast.File:
+				if x.Name.Name == "main" {
+					return true
+				}
+				return false
+			case *ast.FuncDecl:
+				if x.Name.Name == "main" {
+					return true
+				}
+				return false
+			case *ast.ExprStmt:
+				if call, ok := x.X.(*ast.CallExpr); ok {
+					if callSel, ok := call.Fun.(*ast.SelectorExpr); ok {
+						if xxx, ok := callSel.X.(*ast.Ident); ok && xxx.Name == "os" && callSel.Sel.Name == "Exit" {
+							pass.Reportf(x.Pos(), "use os exit expression in main")
+						}
+
+					}
+				}
+			}
+			return true
+		})
+	}
+
+	return nil, nil
+}
+
 func main() {
+
+	CheckOsExit := &analysis.Analyzer{
+		Name: "checkosexit",
+		Doc:  "check use os.exit in package main function main",
+		Run:  run,
+	}
 
 	checks := map[string]bool{
 		"SA*":    true,
@@ -104,6 +143,8 @@ func main() {
 		mnd.Analyzer,
 		// check for body was closed
 		bodyclose.Analyzer,
+		// os.exit checker
+		CheckOsExit,
 	}
 
 	for _, v := range staticcheck.Analyzers {
