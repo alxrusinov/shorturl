@@ -12,6 +12,12 @@ import (
 	"github.com/alxrusinov/shorturl/internal/generator"
 )
 
+const (
+	seconds = 60
+	minutes = 60
+	hours   = 24
+)
+
 // Middlewares - middlewares entity
 type Middlewares struct{}
 
@@ -136,7 +142,7 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 					return
 				}
 
-				c.SetCookie(UserCookie, userID, 60*60*24, "/", "localhost", false, true)
+				c.SetCookie(UserCookie, userID, seconds*minutes*hours, "/", "localhost", false, true)
 
 			}
 

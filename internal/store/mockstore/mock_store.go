@@ -5,6 +5,11 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+const (
+	indexZero = iota
+	indexOne
+)
+
 // MockStore - store mockking real store
 type MockStore struct {
 	mock.Mock
@@ -14,21 +19,21 @@ type MockStore struct {
 func (ms *MockStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	args := ms.Called(arg)
 
-	return args.Get(0).(*model.StoreRecord), args.Error(1)
+	return args.Get(indexZero).(*model.StoreRecord), args.Error(indexOne)
 }
 
 // SetLink adds link to store
 func (ms *MockStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) {
 	args := ms.Called(arg)
 
-	return args.Get(0).(*model.StoreRecord), args.Error(1)
+	return args.Get(indexZero).(*model.StoreRecord), args.Error(indexOne)
 }
 
 // SetBatchLink adds links to store by batch
 func (ms *MockStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) {
 	args := ms.Called(arg)
 
-	return args.Get(0).([]*model.StoreRecord), args.Error(1)
+	return args.Get(indexZero).([]*model.StoreRecord), args.Error(indexOne)
 }
 
 // Ping pings store
@@ -42,14 +47,14 @@ func (ms *MockStore) Ping() error {
 func (ms *MockStore) GetLinks(userID string) ([]model.StoreRecord, error) {
 	args := ms.Called(userID)
 
-	return args.Get(0).([]model.StoreRecord), args.Error(1)
+	return args.Get(indexZero).([]model.StoreRecord), args.Error(indexOne)
 }
 
 // DeleteLinks deletes links by batch
 func (ms *MockStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	args := ms.Called(shorts)
 
-	return args.Error(0)
+	return args.Error(indexZero)
 }
 
 // NewMockStore returns new mockestore instnce
