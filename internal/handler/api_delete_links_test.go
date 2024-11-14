@@ -18,12 +18,13 @@ import (
 
 func TestHandler_APIDeleteLinks(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	teststore := new(mockstore.MockStore)
+	teststore := mockstore.NewMockStore()
 	testGenerator := mockgenerator.NewMockGenerator()
 	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator)
 
 	router := gin.New()
 
+	teststore.On("DeleteLinks", mock.Anything).Return(nil)
 	router.Use(testHandler.Middlewares.CookieMiddleware())
 	router.DELETE("/api/user/urls", testHandler.APIDeleteLinks)
 
@@ -84,11 +85,8 @@ func TestHandler_APIDeleteLinks(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		teststore.On("DeleteLinks", mock.Anything).Unset()
 		t.Run(test.name, func(t *testing.T) {
 			var testRouter *gin.Engine
-
-			teststore.On("DeleteLinks", mock.Anything).Return(nil)
 
 			testRouter = router
 
@@ -97,7 +95,6 @@ func TestHandler_APIDeleteLinks(t *testing.T) {
 			}
 
 			go func() {
-				teststore.On("DeleteLinks", mock.Anything).Return(nil)
 				var batch [][]model.StoreRecord
 
 				for val := range testHandler.DeleteChan {
@@ -109,7 +106,6 @@ func TestHandler_APIDeleteLinks(t *testing.T) {
 			}()
 
 			go func() {
-				teststore.On("DeleteLinks", mock.Anything).Return(nil)
 				var batch [][]model.StoreRecord
 
 				for val := range testHandler.DeleteChan {
