@@ -188,6 +188,7 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 	}
 }
 
+// NewMiddlwares create new Middlwares
 func NewMiddlwares(generator Generator) *Middlewares {
 	return &Middlewares{
 		Generator: generator,

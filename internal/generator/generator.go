@@ -47,6 +47,7 @@ func (g *Generator) GenerateUserID() (string, error) {
 	return hash, nil
 }
 
+// NewGenerator generate generator
 func NewGenerator() *Generator {
 	return &Generator{}
 }

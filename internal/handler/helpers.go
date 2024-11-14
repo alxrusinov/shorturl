@@ -7,6 +7,7 @@ import (
 
 type errReader struct{}
 
+// Read implements method Read for reader
 func (er *errReader) Read(p []byte) (n int, err error) {
 	return 0, errors.New("test error")
 }

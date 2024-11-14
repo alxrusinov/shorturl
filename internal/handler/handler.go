@@ -37,6 +37,7 @@ type Store interface {
 	DeleteLinks(shorts [][]model.StoreRecord) error
 }
 
+// Type Generator is a type for generator
 type Generator interface {
 	GenerateRandomString() (string, error)
 	GenerateUserID() (string, error)
