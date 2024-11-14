@@ -36,6 +36,17 @@ import (
 	"honnef.co/go/tools/staticcheck"
 )
 
+func isOSExit(node *ast.ExprStmt) bool {
+	if call, ok := node.X.(*ast.CallExpr); ok {
+		if callSel, ok := call.Fun.(*ast.SelectorExpr); ok {
+			xxx, ok := callSel.X.(*ast.Ident)
+			return ok && xxx.Name == "os" && callSel.Sel.Name == "Exit"
+
+		}
+	}
+	return false
+}
+
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, file := range pass.Files {
 		ast.Inspect(file, func(node ast.Node) bool {
@@ -51,19 +62,13 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				}
 				return false
 			case *ast.ExprStmt:
-				if call, ok := x.X.(*ast.CallExpr); ok {
-					if callSel, ok := call.Fun.(*ast.SelectorExpr); ok {
-						if xxx, ok := callSel.X.(*ast.Ident); ok && xxx.Name == "os" && callSel.Sel.Name == "Exit" {
-							pass.Reportf(x.Pos(), "use os exit expression in main")
-						}
-
-					}
+				if isOSExit(x) {
+					pass.Reportf(x.Pos(), "use os exit expression in main")
 				}
 			}
 			return true
 		})
 	}
-
 	return nil, nil
 }
 

@@ -25,6 +25,9 @@ func BenchmarkAPIShorten(b *testing.B) {
 	testHandler := NewHandler(testStore, "http://localhost:8080", testGenerator)
 	router := gin.New()
 
+	testGenerator.On("GenerateUserID").Return("123", nil)
+	testGenerator.On("GenerateRandomString").Return("123", nil)
+
 	router.Use(testHandler.Middlewares.CookieMiddleware())
 
 	router.POST("/api/shorten", testHandler.APIShorten)
