@@ -4,14 +4,16 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/alxrusinov/shorturl/internal/generator/mockgenerator"
 	"github.com/alxrusinov/shorturl/internal/store/mockstore"
 	"github.com/gin-gonic/gin"
 )
 
 func ExampleHandler_Ping() {
 	store := mockstore.NewMockStore()
+	testGenerator := mockgenerator.NewMockGenerator()
 
-	handler := NewHandler(store, "http://example.com:8080")
+	handler := NewHandler(store, "http://example.com:8080", testGenerator)
 
 	router := gin.New()
 

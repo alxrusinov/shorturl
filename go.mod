@@ -14,14 +14,13 @@ require (
 require (
 	github.com/buger/jsonparser v1.1.1
 	github.com/gin-contrib/pprof v1.5.0
-	github.com/tommy-muehle/go-mnd/v2 v2.5.1
+	github.com/timakin/bodyclose v0.0.0-20241017074824-adbc21e6bf36
 	golang.org/x/tools v0.27.0
 )
 
 require (
 	github.com/gostaticanalysis/analysisutil v0.7.1 // indirect
 	github.com/gostaticanalysis/comment v1.4.2 // indirect
-	github.com/timakin/bodyclose v0.0.0-20241017074824-adbc21e6bf36 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20231108232855-2478ac86f678 // indirect
 )
 

@@ -8,8 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
-
-	"github.com/alxrusinov/shorturl/internal/generator"
 )
 
 const (
@@ -19,7 +17,9 @@ const (
 )
 
 // Middlewares - middlewares entity
-type Middlewares struct{}
+type Middlewares struct {
+	Generator Generator
+}
 
 // UserCookie - const of name cookie for user id
 const UserCookie = "user_cookie"
@@ -135,7 +135,7 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 			userID, err := c.Cookie(UserCookie)
 
 			if err != nil {
-				userID, err = generator.GenerateUserID()
+				userID, err = middlwares.Generator.GenerateUserID()
 
 				if err != nil {
 					c.AbortWithStatus(http.StatusInternalServerError)
@@ -185,5 +185,11 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc {
 			return
 		}
 
+	}
+}
+
+func NewMiddlwares(generator Generator) *Middlewares {
+	return &Middlewares{
+		Generator: generator,
 	}
 }

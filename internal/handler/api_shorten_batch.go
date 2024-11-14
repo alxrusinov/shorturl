@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
@@ -41,7 +40,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	defer ctx.Request.Body.Close()
 
 	for _, val := range content {
-		shortenURL, err := generator.GenerateRandomString()
+		shortenURL, err := handler.Generator.GenerateRandomString()
 
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
@@ -67,7 +66,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) {
 	resp, err := json.Marshal(&result)
 
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 

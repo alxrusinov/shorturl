@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"os"
+	"sync"
 )
 
 // Default fields for config
@@ -23,12 +24,17 @@ type Config struct {
 	DBPath          string
 }
 
+var once sync.Once
+
 // Init parses flags and initial config
 func (config *Config) Init() {
-	flag.StringVar(&config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
-	flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
-	flag.StringVar(&config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
-	flag.StringVar(&config.DBPath, "d", "", "path to data base")
+	once.Do(func() {
+		flag.StringVar(&config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
+		flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
+		flag.StringVar(&config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
+		flag.StringVar(&config.DBPath, "d", "", "path to data base")
+	})
+
 	flag.Parse()
 
 	if baseURL, ok := os.LookupEnv("SERVER_ADDRESS"); ok {

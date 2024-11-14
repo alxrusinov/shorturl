@@ -59,7 +59,7 @@ func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, err
 		record := &model.StoreRecord{}
 		err := json.Unmarshal(scanner.Bytes(), &record)
 		if err == nil && record.OriginalLink == arg.OriginalLink {
-			arg.OriginalLink = record.OriginalLink
+			arg.UUID = record.UUID
 			return arg, &customerrors.DuplicateValueError{Err: errors.New("record already exists")}
 		}
 	}
@@ -99,7 +99,7 @@ func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, err
 
 // Ping pings file store
 func (store *FileStore) Ping() error {
-	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_APPEND, 0666)
 
 	if err != nil {
 		return err
