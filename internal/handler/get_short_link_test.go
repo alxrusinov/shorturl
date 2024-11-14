@@ -144,6 +144,8 @@ func TestHandler_GetShortLink(t *testing.T) {
 
 			res := w.Result()
 
+			defer res.Body.Close()
+
 			assert.Equal(t, tt.code, res.StatusCode)
 		})
 	}

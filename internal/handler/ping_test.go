@@ -58,6 +58,8 @@ func TestHandler_Ping(t *testing.T) {
 
 			res := w.Result()
 
+			defer res.Body.Close()
+
 			assert.Equal(t, tt.code, res.StatusCode)
 
 		})
