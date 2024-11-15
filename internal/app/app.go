@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/alxrusinov/shorturl/internal/config"
+	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/logger"
 	"github.com/alxrusinov/shorturl/internal/model"
@@ -25,7 +26,9 @@ func Run(config *config.Config) {
 
 	}
 
-	handler := handler.NewHandler(sStore, config.ResponseURL)
+	generator := generator.NewGenerator()
+
+	handler := handler.NewHandler(sStore, config.ResponseURL, generator)
 	logger := logger.NewLogger()
 	newServer := server.NewServer(handler, config.BaseURL, logger)
 

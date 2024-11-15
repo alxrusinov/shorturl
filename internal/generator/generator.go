@@ -6,8 +6,11 @@ import (
 	"encoding/base64"
 )
 
+// Generator has methods for creating random strings
+type Generator struct{}
+
 // GenerateRandomString generate random string
-func GenerateRandomString() (string, error) {
+func (g *Generator) GenerateRandomString() (string, error) {
 	data := make([]byte, 512)
 
 	_, err := rand.Read(data)
@@ -26,7 +29,7 @@ func GenerateRandomString() (string, error) {
 }
 
 // GenerateUserID return uaer ID as string
-func GenerateUserID() (string, error) {
+func (g *Generator) GenerateUserID() (string, error) {
 	data := make([]byte, 512)
 
 	_, err := rand.Read(data)
@@ -42,4 +45,9 @@ func GenerateUserID() (string, error) {
 	hash := base64.URLEncoding.EncodeToString(h.Sum(nil))
 
 	return hash, nil
+}
+
+// NewGenerator generate generator
+func NewGenerator() *Generator {
+	return &Generator{}
 }

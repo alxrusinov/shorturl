@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/alxrusinov/shorturl/internal/customerrors"
-	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
@@ -33,9 +32,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 		return
 	}
 
-	result := struct {
-		Result string `json:"result"`
-	}{}
+	result := new(APIShortenResult)
 
 	body, err := io.ReadAll(ctx.Request.Body)
 
@@ -53,7 +50,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 		return
 	}
 
-	shortenURL, err := generator.GenerateRandomString()
+	shortenURL, err := handler.Generator.GenerateRandomString()
 
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
@@ -87,7 +84,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) {
 	resp, err := json.Marshal(&result)
 
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
