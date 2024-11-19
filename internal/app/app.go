@@ -2,7 +2,9 @@ package app
 
 import (
 	"context"
+	"errors"
 	"log"
+	"net/http"
 
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/generator"
@@ -60,12 +62,12 @@ func Run(ctx context.Context, config *config.Config) {
 	go func(ctx context.Context) {
 		<-ctx.Done()
 		if err := newServer.Shutdown(ctx); err != nil {
-			log.Fatal("server has been crashed")
+			log.Fatal("server has been crashed shutdown")
 		}
 	}(ctx)
 
-	if err := newServer.Run(); err != nil {
-		log.Fatal("server has been crashed")
+	if err := newServer.Run(); !errors.Is(err, http.ErrServerClosed) {
+		log.Fatal("server has been crashed run")
 	}
 
 }

@@ -33,7 +33,6 @@ func (server *Server) Run() error {
 
 // Shutsown realize gracefull shutdown server
 func (server *Server) Shutdown(ctx context.Context) error {
-	<-ctx.Done()
 	if err := server.server.Shutdown(ctx); err != nil {
 		return err
 	}
