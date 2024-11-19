@@ -1,6 +1,8 @@
 package app
 
 import (
+	"log"
+
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/handler"
@@ -30,7 +32,7 @@ func Run(config *config.Config) {
 
 	handler := handler.NewHandler(sStore, config.ResponseURL, generator)
 	logger := logger.NewLogger()
-	newServer := server.NewServer(handler, config.BaseURL, logger)
+	newServer := server.NewServer(handler, config, logger)
 
 	go func() {
 		var batch [][]model.StoreRecord
@@ -54,6 +56,8 @@ func Run(config *config.Config) {
 		}
 	}()
 
-	newServer.Run()
+	if err := newServer.Run(); err != nil {
+		log.Fatal("server has been crashed")
+	}
 
 }

@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/generator/mockgenerator"
 	"github.com/alxrusinov/shorturl/internal/handler"
 	"github.com/alxrusinov/shorturl/internal/logger"
@@ -57,7 +58,11 @@ func TestNewServer(t *testing.T) {
 
 			pprof.Register(server.mux)
 
-			got := NewServer(testHandler, addr, logger)
+			config := config.NewConfig()
+
+			config.BaseURL = addr
+
+			got := NewServer(testHandler, config, logger)
 
 			if !reflect.DeepEqual(got.handler, server.handler) {
 				t.Errorf("NewServer() = %v, want %v", got, server)

@@ -22,6 +22,7 @@ type Config struct {
 	ResponseURL     string
 	FileStoragePath string
 	DBPath          string
+	TLS             bool
 }
 
 var once sync.Once
@@ -33,6 +34,7 @@ func (config *Config) Init() {
 		flag.StringVar(&config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
 		flag.StringVar(&config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
 		flag.StringVar(&config.DBPath, "d", "", "path to data base")
+		flag.BoolVar(&config.TLS, "s", false, "configure http or https server")
 	})
 
 	flag.Parse()
@@ -51,6 +53,9 @@ func (config *Config) Init() {
 
 	if dBPath, ok := os.LookupEnv("DATABASE_DSN"); ok {
 		config.DBPath = dBPath
+	}
+	if TLS, ok := os.LookupEnv("ENABLE_HTTPS"); ok && TLS != "" {
+		config.TLS = true
 	}
 }
 
