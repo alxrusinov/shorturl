@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-contrib/pprof"
@@ -28,6 +29,16 @@ func (server *Server) Run() error {
 
 	return server.server.ListenAndServe()
 
+}
+
+// Shutsown realize gracefull shutdown server
+func (server *Server) Shutdown(ctx context.Context) error {
+	<-ctx.Done()
+	if err := server.server.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // NewServer initialize and return new server instance

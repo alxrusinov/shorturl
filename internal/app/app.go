@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"log"
 
 	"github.com/alxrusinov/shorturl/internal/config"
@@ -15,7 +16,7 @@ import (
 )
 
 // Run configurate and run application
-func Run(config *config.Config) {
+func Run(ctx context.Context, config *config.Config) {
 	var sStore handler.Store
 
 	switch {
@@ -55,6 +56,13 @@ func Run(config *config.Config) {
 			batch = batch[0:0]
 		}
 	}()
+
+	go func(ctx context.Context) {
+		<-ctx.Done()
+		if err := newServer.Shutdown(ctx); err != nil {
+			log.Fatal("server has been crashed")
+		}
+	}(ctx)
 
 	if err := newServer.Run(); err != nil {
 		log.Fatal("server has been crashed")
