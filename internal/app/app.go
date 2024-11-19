@@ -30,7 +30,7 @@ func Run(config *config.Config) {
 
 	generator := generator.NewGenerator()
 
-	handler := handler.NewHandler(sStore, config.ResponseURL, generator)
+	handler := handler.NewHandler(sStore, config.BaseURL, generator)
 	logger := logger.NewLogger()
 	newServer := server.NewServer(handler, config, logger)
 

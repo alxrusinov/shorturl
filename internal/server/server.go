@@ -35,7 +35,7 @@ func NewServer(handler *handler.Handler, config *config.Config, logger zerolog.L
 	server := &Server{
 		mux:     gin.New(),
 		handler: handler,
-		addr:    config.BaseURL,
+		addr:    config.ServerAddress,
 		TLS:     config.TLS,
 	}
 

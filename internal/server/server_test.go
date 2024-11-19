@@ -60,7 +60,7 @@ func TestNewServer(t *testing.T) {
 
 			config := config.NewConfig()
 
-			config.BaseURL = addr
+			config.ServerAddress = addr
 
 			got := NewServer(testHandler, config, logger)
 

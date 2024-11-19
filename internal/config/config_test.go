@@ -29,37 +29,37 @@ func TestConfig_Init(t *testing.T) {
 			wantBaseURL:     "baseURL",
 			wantDBPath:      "",
 			wantFilePath:    DefaultFilePath,
-			wantResponseURL: DeafaultResponseURL,
+			wantResponseURL: DefaultBaseURL,
 			env:             map[string]string{},
 		},
 		{
 			name:            "2# db url from args",
 			config:          config,
-			osArgs:          []string{"test", "-d", "DB", "-a", DeafaultBaseURL},
-			wantBaseURL:     DeafaultBaseURL,
+			osArgs:          []string{"test", "-d", "DB", "-a", DefaulServerAddress},
+			wantBaseURL:     DefaulServerAddress,
 			wantDBPath:      "DB",
 			wantFilePath:    DefaultFilePath,
-			wantResponseURL: DeafaultResponseURL,
+			wantResponseURL: DefaultBaseURL,
 			env:             map[string]string{},
 		},
 		{
 			name:            "3# file url from args",
 			config:          config,
-			osArgs:          []string{"test", "-d", "", "-a", DeafaultBaseURL, "-f", "filePath"},
-			wantBaseURL:     DeafaultBaseURL,
+			osArgs:          []string{"test", "-d", "", "-a", DefaulServerAddress, "-f", "filePath"},
+			wantBaseURL:     DefaulServerAddress,
 			wantDBPath:      "",
 			wantFilePath:    "filePath",
-			wantResponseURL: DeafaultResponseURL,
+			wantResponseURL: DefaultBaseURL,
 			env:             map[string]string{},
 		},
 		{
 			name:            "4# server address env",
 			config:          config,
-			osArgs:          []string{"test", "-d", "", "-a", DeafaultBaseURL, "-f", DefaultFilePath, "-b", DeafaultResponseURL},
+			osArgs:          []string{"test", "-d", "", "-a", DefaulServerAddress, "-f", DefaultFilePath, "-b", DefaultBaseURL},
 			wantBaseURL:     "foo",
 			wantDBPath:      "",
 			wantFilePath:    DefaultFilePath,
-			wantResponseURL: DeafaultResponseURL,
+			wantResponseURL: DefaultBaseURL,
 			env: map[string]string{
 				"SERVER_ADDRESS": "foo",
 			},
@@ -67,7 +67,7 @@ func TestConfig_Init(t *testing.T) {
 		{
 			name:            "5# resp address env",
 			config:          config,
-			osArgs:          []string{"test", "-d", "", "-a", DeafaultBaseURL, "-f", DefaultFilePath, "-b", DeafaultResponseURL},
+			osArgs:          []string{"test", "-d", "", "-a", DefaulServerAddress, "-f", DefaultFilePath, "-b", DefaultBaseURL},
 			wantBaseURL:     "foo",
 			wantDBPath:      "",
 			wantFilePath:    DefaultFilePath,
@@ -80,7 +80,7 @@ func TestConfig_Init(t *testing.T) {
 		{
 			name:            "6# server address env",
 			config:          config,
-			osArgs:          []string{"test", "-d", "", "-a", DeafaultBaseURL, "-f", DefaultFilePath, "-b", DeafaultResponseURL},
+			osArgs:          []string{"test", "-d", "", "-a", DefaulServerAddress, "-f", DefaultFilePath, "-b", DefaultBaseURL},
 			wantBaseURL:     "foo",
 			wantDBPath:      "",
 			wantFilePath:    "baz",
@@ -94,7 +94,7 @@ func TestConfig_Init(t *testing.T) {
 		{
 			name:            "7# db address env",
 			config:          config,
-			osArgs:          []string{"test", "-d", "", "-a", DeafaultBaseURL, "-f", DefaultFilePath, "-b", DeafaultResponseURL},
+			osArgs:          []string{"test", "-d", "", "-a", DefaulServerAddress, "-f", DefaultFilePath, "-b", DefaultBaseURL},
 			wantBaseURL:     "foo",
 			wantDBPath:      "clown",
 			wantFilePath:    "baz",
@@ -121,10 +121,10 @@ func TestConfig_Init(t *testing.T) {
 
 			tt.config.Init()
 
-			assert.Equal(t, tt.wantBaseURL, tt.config.BaseURL)
+			assert.Equal(t, tt.wantBaseURL, tt.config.ServerAddress)
 			assert.Equal(t, tt.wantDBPath, tt.config.DBPath)
 			assert.Equal(t, tt.wantFilePath, tt.config.FileStoragePath)
-			assert.Equal(t, tt.wantResponseURL, tt.config.ResponseURL)
+			assert.Equal(t, tt.wantResponseURL, tt.config.BaseURL)
 
 		})
 	}
