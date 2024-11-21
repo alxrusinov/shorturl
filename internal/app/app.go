@@ -1,6 +1,11 @@
 package app
 
 import (
+	"context"
+	"errors"
+	"log"
+	"net/http"
+
 	"github.com/alxrusinov/shorturl/internal/config"
 	"github.com/alxrusinov/shorturl/internal/generator"
 	"github.com/alxrusinov/shorturl/internal/handler"
@@ -13,7 +18,7 @@ import (
 )
 
 // Run configurate and run application
-func Run(config *config.Config) {
+func Run(ctx context.Context, config *config.Config) {
 	var sStore handler.Store
 
 	switch {
@@ -28,9 +33,9 @@ func Run(config *config.Config) {
 
 	generator := generator.NewGenerator()
 
-	handler := handler.NewHandler(sStore, config.ResponseURL, generator)
+	handler := handler.NewHandler(sStore, config.BaseURL, generator)
 	logger := logger.NewLogger()
-	newServer := server.NewServer(handler, config.BaseURL, logger)
+	newServer := server.NewServer(handler, config, logger)
 
 	go func() {
 		var batch [][]model.StoreRecord
@@ -54,6 +59,15 @@ func Run(config *config.Config) {
 		}
 	}()
 
-	newServer.Run()
+	go func(ctx context.Context) {
+		<-ctx.Done()
+		if err := newServer.Shutdown(ctx); err != nil {
+			log.Fatal("server has been crashed shutdown")
+		}
+	}(ctx)
+
+	if err := newServer.Run(); !errors.Is(err, http.ErrServerClosed) {
+		log.Fatal("server has been crashed run")
+	}
 
 }

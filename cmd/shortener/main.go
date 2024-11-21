@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os/signal"
+	"syscall"
 
 	"github.com/alxrusinov/shorturl/internal/app"
 	"github.com/alxrusinov/shorturl/internal/config"
@@ -18,6 +21,10 @@ func main() {
 
 	config.Init()
 
-	app.Run(config)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+
+	defer stop()
+
+	app.Run(ctx, config)
 
 }
