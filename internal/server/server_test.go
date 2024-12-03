@@ -27,7 +27,7 @@ func TestNewServer(t *testing.T) {
 			addr := "http://ex.com"
 			testStore := mockstore.NewMockStore()
 			testGenerator := mockgenerator.NewMockGenerator()
-			testHandler := handler.NewHandler(testStore, addr, testGenerator)
+			testHandler := handler.NewHandler(testStore, addr, testGenerator, "")
 			logger := logger.NewLogger()
 
 			server := &Server{

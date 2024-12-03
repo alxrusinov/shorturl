@@ -5,7 +5,8 @@ import (
 )
 
 type options struct {
-	responseAddr string
+	responseAddr  string
+	trustedSubnet string
 }
 
 // Handler - structure with information about handler entity
@@ -35,6 +36,7 @@ type Store interface {
 	Ping() error
 	GetLinks(userID string) ([]model.StoreRecord, error)
 	DeleteLinks(shorts [][]model.StoreRecord) error
+	GetStat() (*model.StatResponse, error)
 }
 
 // Type Generator is a type for generator
@@ -44,11 +46,12 @@ type Generator interface {
 }
 
 // NewHandler returns new handler instance
-func NewHandler(sStore Store, responseAddr string, generator Generator) *Handler {
+func NewHandler(sStore Store, responseAddr string, generator Generator, trustedSubnet string) *Handler {
 	handler := &Handler{
 		store: sStore,
 		options: &options{
-			responseAddr: responseAddr,
+			responseAddr:  responseAddr,
+			trustedSubnet: trustedSubnet,
 		},
 		DeleteChan:  make(chan []model.StoreRecord),
 		Generator:   generator,
