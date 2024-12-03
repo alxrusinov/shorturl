@@ -77,6 +77,12 @@ func (store *InMemoryStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	return nil
 }
 
+func (store *InMemoryStore) GetStat() (*model.StatResponse, error) {
+	result := new(model.StatResponse)
+
+	return result, nil
+}
+
 // NewInMemoryStore returns new store instance
 func NewInMemoryStore() *InMemoryStore {
 	store := &InMemoryStore{

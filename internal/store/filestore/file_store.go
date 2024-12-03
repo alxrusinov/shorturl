@@ -237,6 +237,12 @@ func (store *FileStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 
 }
 
+func (store *FileStore) GetStat() (*model.StatResponse, error) {
+	result := new(model.StatResponse)
+
+	return result, nil
+}
+
 // NewFileStore returns new instance of file store
 func NewFileStore(filePath string) *FileStore {
 	store := &FileStore{filePath: filePath}

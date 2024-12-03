@@ -22,7 +22,7 @@ func BenchmarkAPIShorten(b *testing.B) {
 	gin.SetMode(gin.TestMode)
 	testGenerator := mockgenerator.NewMockGenerator()
 	testStore := inmemorystore.NewInMemoryStore()
-	testHandler := NewHandler(testStore, "http://localhost:8080", testGenerator)
+	testHandler := NewHandler(testStore, "http://localhost:8080", testGenerator, "")
 	router := gin.New()
 
 	testGenerator.On("GenerateUserID").Return("123", nil)
@@ -56,7 +56,7 @@ func TestHandler_APIShorten(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	teststore := mockstore.NewMockStore()
 	testGenerator := mockgenerator.NewMockGenerator()
-	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator)
+	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator, "")
 
 	router := gin.New()
 

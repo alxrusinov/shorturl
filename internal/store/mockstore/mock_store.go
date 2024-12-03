@@ -57,6 +57,12 @@ func (ms *MockStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	return args.Error(indexZero)
 }
 
+func (ms *MockStore) GetStat() (*model.StatResponse, error) {
+	args := ms.Called()
+
+	return args.Get(indexZero).(*model.StatResponse), args.Error(indexOne)
+}
+
 // NewMockStore returns new mockestore instnce
 func NewMockStore() *MockStore {
 	return new(MockStore)

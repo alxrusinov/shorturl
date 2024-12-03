@@ -13,7 +13,7 @@ func ExampleHandler_Ping() {
 	store := mockstore.NewMockStore()
 	testGenerator := mockgenerator.NewMockGenerator()
 
-	handler := NewHandler(store, "http://example.com:8080", testGenerator)
+	handler := NewHandler(store, "http://example.com:8080", testGenerator, "")
 
 	router := gin.New()
 

@@ -69,6 +69,7 @@ func NewServer(handler *handler.Handler, config *config.Config, logger zerolog.L
 
 	server.mux.DELETE("/api/user/urls", server.handler.APIDeleteLinks)
 
+	server.mux.GET("/api/internal/stats", server.handler.Stats)
 	pprof.Register(server.mux)
 
 	server.server = &http.Server{

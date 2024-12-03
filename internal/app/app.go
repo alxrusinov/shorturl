@@ -33,7 +33,7 @@ func Run(ctx context.Context, config *config.Config) {
 
 	generator := generator.NewGenerator()
 
-	handler := handler.NewHandler(sStore, config.BaseURL, generator)
+	handler := handler.NewHandler(sStore, config.BaseURL, generator, config.TrustedSubnet)
 	logger := logger.NewLogger()
 	newServer := server.NewServer(handler, config, logger)
 
