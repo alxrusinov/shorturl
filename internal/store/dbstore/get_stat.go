@@ -4,6 +4,7 @@ import (
 	"github.com/alxrusinov/shorturl/internal/model"
 )
 
+// GetStat - gets dtatistics of urls and users
 func (store *DBStore) GetStat() (*model.StatResponse, error) {
 	result := new(model.StatResponse)
 

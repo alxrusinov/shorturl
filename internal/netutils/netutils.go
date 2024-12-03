@@ -2,6 +2,7 @@ package netutils
 
 import "net"
 
+// CheckSubnet - checks including ip into trustedSubnet
 func CheckSubnet(trustedSubnet, ip string) (bool, error) {
 	if trustedSubnet == "" {
 		return false, nil

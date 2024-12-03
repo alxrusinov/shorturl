@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Stats - handler for statistics of urls and users
 func (handler Handler) Stats(ctx *gin.Context) {
 	ip := ctx.Request.Header.Get("X-Real-IP")
 

@@ -57,6 +57,7 @@ func (ms *MockStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	return args.Error(indexZero)
 }
 
+// GetStat - gets dtatistics of urls and users
 func (ms *MockStore) GetStat() (*model.StatResponse, error) {
 	args := ms.Called()
 

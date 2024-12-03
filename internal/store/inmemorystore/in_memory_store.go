@@ -77,6 +77,7 @@ func (store *InMemoryStore) DeleteLinks(shorts [][]model.StoreRecord) error {
 	return nil
 }
 
+// GetStat - gets dtatistics of urls and users
 func (store *InMemoryStore) GetStat() (*model.StatResponse, error) {
 	result := new(model.StatResponse)
 
