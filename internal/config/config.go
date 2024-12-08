@@ -24,6 +24,7 @@ type Config struct {
 	DBPath          string `json:"database_dsn"`
 	TLS             bool   `json:"enable_https"`
 	TrustedSubnet   string `json:"trusted_subnet"`
+	GRPCAddress     string `json:"grpc_address"`
 	ConfigPath      string
 }
 
@@ -40,6 +41,7 @@ func (config *Config) Init() {
 		flag.StringVar(&config.ConfigPath, "c", "", "path to config file")
 		flag.StringVar(&config.ConfigPath, "config", "", "path to config file")
 		flag.StringVar(&config.TrustedSubnet, "t", "", "trust subnet")
+		flag.StringVar(&config.GRPCAddress, "g", "", "grpc server address")
 	})
 
 	flag.Parse()
@@ -58,6 +60,9 @@ func (config *Config) Init() {
 
 	if dBPath, ok := os.LookupEnv("DATABASE_DSN"); ok {
 		config.DBPath = dBPath
+	}
+	if GRPCAddress, ok := os.LookupEnv("GRPC_ADDRESS"); ok {
+		config.GRPCAddress = GRPCAddress
 	}
 	if trustedSubnet, ok := os.LookupEnv("TRUSTED_SUBNET"); ok {
 		config.TrustedSubnet = trustedSubnet
