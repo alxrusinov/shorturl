@@ -16,7 +16,7 @@ func TestHandler_Ping(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	teststore := new(mockstore.MockStore)
 	testGenerator := mockgenerator.NewMockGenerator()
-	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator)
+	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator, "")
 
 	router := gin.New()
 

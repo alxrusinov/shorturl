@@ -23,6 +23,8 @@ type Config struct {
 	FileStoragePath string `json:"file_storage_path"`
 	DBPath          string `json:"database_dsn"`
 	TLS             bool   `json:"enable_https"`
+	TrustedSubnet   string `json:"trusted_subnet"`
+	GRPCAddress     string `json:"grpc_address"`
 	ConfigPath      string
 }
 
@@ -38,6 +40,8 @@ func (config *Config) Init() {
 		flag.BoolVar(&config.TLS, "s", false, "configure http or https server")
 		flag.StringVar(&config.ConfigPath, "c", "", "path to config file")
 		flag.StringVar(&config.ConfigPath, "config", "", "path to config file")
+		flag.StringVar(&config.TrustedSubnet, "t", "", "trust subnet")
+		flag.StringVar(&config.GRPCAddress, "g", "", "grpc server address")
 	})
 
 	flag.Parse()
@@ -56,6 +60,12 @@ func (config *Config) Init() {
 
 	if dBPath, ok := os.LookupEnv("DATABASE_DSN"); ok {
 		config.DBPath = dBPath
+	}
+	if GRPCAddress, ok := os.LookupEnv("GRPC_ADDRESS"); ok {
+		config.GRPCAddress = GRPCAddress
+	}
+	if trustedSubnet, ok := os.LookupEnv("TRUSTED_SUBNET"); ok {
+		config.TrustedSubnet = trustedSubnet
 	}
 	if TLS, ok := os.LookupEnv("ENABLE_HTTPS"); ok && TLS != "" {
 		config.TLS = true

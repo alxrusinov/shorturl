@@ -24,7 +24,7 @@ func TestHandler_GetUserLinks(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	teststore := mockstore.NewMockStore()
 	testGenerator := mockgenerator.NewMockGenerator()
-	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator)
+	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator, "")
 
 	teststore.On("GetLinks", trueUserID).Return([]model.StoreRecord{
 		{

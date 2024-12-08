@@ -26,7 +26,7 @@ func TestHandler_GetShortLink(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	teststore := mockstore.NewMockStore()
 	testGenerator := mockgenerator.NewMockGenerator()
-	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator)
+	testHandler := NewHandler(teststore, "http://localhost:8080", testGenerator, "")
 
 	router := gin.New()
 

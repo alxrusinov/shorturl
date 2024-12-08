@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package grpchandler.proto;
+
+option go_package = "/internal/grpchandler/proto";
+
+message PingRequest {};
+
+message PingResponse {};
+
+message DeleteLinkRequest {
+  string user_id = 1;
+  repeated string links = 2;
+};
+
+message DeleteResponse {};
+
+message GetShortLinkRequest {
+  string user_id = 1;
+  string link = 2;
+}
+
+message GetShortLinkResponse {
+  string shorten_link = 1;
+}
+
+message GetOriginalRequest {
+  string shorten_link = 1;
+}
+
+message GetOriginalResponse {
+  string link = 1;
+}
+
+message ShortenRequest {
+  string user_id = 1;
+  string url = 2;
+}
+
+message ShortenResponse {
+  string result = 1;
+}
+
+message ShortenItemRequest {
+  string correlation_id = 1;
+  string original_url = 2;
+}
+
+message ShortenBatchRequest {
+  repeated ShortenItemRequest objects = 1;
+  string user_id = 2;
+}
+
+message ShortenItemResponse {
+  string correlation_id = 1;
+  string short_url = 2;
+}
+
+message ShortenBatchResponse {
+  repeated ShortenItemResponse objects = 1;
+}
+
+message UserLinksRequest {
+  string user_id = 1;
+}
+
+message UserLinkResponse {
+  string short_url = 1;
+  string original_url = 2;
+}
+
+message UserLinksResponse {
+  repeated UserLinkResponse objects = 1;
+}
+
+message StatsRequest {
+  string x_real_ip = 1;
+}
+
+message StatsResponse {
+  int32 urls = 1;
+  int32 users = 2;
+}
+
+service Handler {
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc APIDeleteLinks(DeleteLinkRequest) returns (DeleteResponse);
+  rpc GetShortLink(GetShortLinkRequest) returns (GetShortLinkResponse);
+  rpc GetOriginaltLink(GetOriginalRequest) returns (GetOriginalResponse);
+  rpc Shorten(ShortenRequest) returns (ShortenResponse);
+  rpc ShortenBatch(ShortenBatchRequest) returns (ShortenBatchResponse);
+  rpc GetUserLinks(UserLinksRequest) returns (UserLinksResponse);
+  rpc Stats(StatsRequest) returns (StatsResponse);
+}
