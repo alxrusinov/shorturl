@@ -33,7 +33,7 @@ type GRPCServer struct {
 	addr          string
 	responseAddr  string
 	trustedSubnet string
-	DeleteChan    chan []model.StoreRecord
+	deleteChan    chan []model.StoreRecord
 	Generator     Generator
 }
 
@@ -58,12 +58,16 @@ func Run(g *GRPCServer) error {
 
 }
 
+func (g *GRPCServer) GetDelChan() <-chan []model.StoreRecord {
+	return g.deleteChan
+}
+
 // NewGRPCServer creates GRPCServer
 func NewGRPCServer(store Store, addr string, generator Generator, responseAddr string, trustedSubnet string) *GRPCServer {
 	server := &GRPCServer{
 		store:         store,
 		addr:          addr,
-		DeleteChan:    make(chan []model.StoreRecord),
+		deleteChan:    make(chan []model.StoreRecord),
 		Generator:     generator,
 		responseAddr:  responseAddr,
 		trustedSubnet: trustedSubnet,

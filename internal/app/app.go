@@ -71,7 +71,9 @@ func Run(ctx context.Context, config *config.Config) {
 	go func() {
 		var batch [][]model.StoreRecord
 
-		for val := range newGRPSServer.DeleteChan {
+		delChan := newGRPSServer.GetDelChan()
+
+		for val := range delChan {
 			batch = append(batch, val)
 			sStore.DeleteLinks(batch)
 

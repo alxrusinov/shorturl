@@ -18,7 +18,7 @@ func (g *GRPCServer) APIDeleteLinks(ctx context.Context, in *pb.DeleteLinkReques
 		})
 	}
 
-	g.DeleteChan <- batch
+	g.deleteChan <- batch
 
 	return nil, nil
 }
