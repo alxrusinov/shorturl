@@ -9,8 +9,7 @@ import (
 
 // DBStore implements Store interface for data base
 type DBStore struct {
-	db          *sql.DB
-	insertQuery *sql.Stmt
+	db *sql.DB
 }
 
 // NewDBStore initializes and returns data base store instance
@@ -30,19 +29,6 @@ func NewDBStore(dbPath string) *DBStore {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	insertQueryString := `INSERT INTO links (short, original, correlation_id, user_id)
-				VALUES ($1, $2, $3, $4)
-				RETURNING short, original, correlation_id, user_id;
-				`
-
-	insertQuery, err := db.Prepare(insertQueryString)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	store.insertQuery = insertQuery
 
 	return store
 }
