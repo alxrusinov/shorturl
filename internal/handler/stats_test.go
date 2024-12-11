@@ -25,23 +25,23 @@ func TestHandler_Stats(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		xRealIp string
+		xRealIP string
 		code    int
 		watnErr bool
 	}{
 		{
 			name:    "1# success",
-			xRealIp: "176.14.86.83",
+			xRealIP: "176.14.86.83",
 			code:    http.StatusOK,
 		},
 		{
 			name:    "2# wron real ip",
-			xRealIp: "",
+			xRealIP: "",
 			code:    http.StatusForbidden,
 		},
 		{
 			name:    "3# error",
-			xRealIp: "176.14.86.83",
+			xRealIP: "176.14.86.83",
 			code:    http.StatusInternalServerError,
 			watnErr: true,
 		},
@@ -60,7 +60,7 @@ func TestHandler_Stats(t *testing.T) {
 
 			w := httptest.NewRecorder()
 
-			request.Header.Add("X-Real-IP", tt.xRealIp)
+			request.Header.Add("X-Real-IP", tt.xRealIP)
 
 			testRouter.ServeHTTP(w, request)
 
