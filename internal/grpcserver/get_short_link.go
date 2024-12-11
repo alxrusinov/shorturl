@@ -3,7 +3,7 @@ package grpcserver
 import (
 	"context"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) GetShortenLink(ctx context.Context, in *pb.GetShortLinkRequest) (*pb.GetShortLinkResponse, error) {

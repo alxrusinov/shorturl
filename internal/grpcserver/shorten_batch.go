@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
 	"github.com/alxrusinov/shorturl/internal/model"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) ShortenBatch(ctx context.Context, in *pb.ShortenBatchRequest) (*pb.ShortenBatchResponse, error) {

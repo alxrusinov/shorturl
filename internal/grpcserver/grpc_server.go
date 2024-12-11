@@ -3,8 +3,8 @@ package grpcserver
 import (
 	"net"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
 	"github.com/alxrusinov/shorturl/internal/model"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/encoding/gzip"
 )

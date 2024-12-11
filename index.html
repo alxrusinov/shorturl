@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>shortener: Go Coverage Report</title>
+		<title>app: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,65 +55,89 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/alxrusinov/shorturl/cmd/shortener/main.go (0.0%)</option>
+				<option value="file0">github.com/alxrusinov/shorturl/internal/app/app.go (0.0%)</option>
 				
-				<option value="file1">github.com/alxrusinov/shorturl/cmd/staticlint/main.go (0.0%)</option>
+				<option value="file1">github.com/alxrusinov/shorturl/internal/config/config.go (86.2%)</option>
 				
-				<option value="file2">github.com/alxrusinov/shorturl/internal/app/app.go (0.0%)</option>
+				<option value="file2">github.com/alxrusinov/shorturl/internal/config/use_config_file.go (12.0%)</option>
 				
-				<option value="file3">github.com/alxrusinov/shorturl/internal/config/config.go (100.0%)</option>
+				<option value="file3">github.com/alxrusinov/shorturl/internal/customerrors/duplicate_value_error.go (100.0%)</option>
 				
-				<option value="file4">github.com/alxrusinov/shorturl/internal/customerrors/duplicate_value_error.go (100.0%)</option>
+				<option value="file4">github.com/alxrusinov/shorturl/internal/generator/generator.go (88.2%)</option>
 				
-				<option value="file5">github.com/alxrusinov/shorturl/internal/generator/generator.go (88.2%)</option>
+				<option value="file5">github.com/alxrusinov/shorturl/internal/generator/mockgenerator/mock_generator.go (100.0%)</option>
 				
-				<option value="file6">github.com/alxrusinov/shorturl/internal/generator/mockgenerator/mock_generator.go (60.0%)</option>
+				<option value="file6">github.com/alxrusinov/shorturl/internal/grpcserver/api_delete_links.go (100.0%)</option>
 				
-				<option value="file7">github.com/alxrusinov/shorturl/internal/handler/api_delete_links.go (89.5%)</option>
+				<option value="file7">github.com/alxrusinov/shorturl/internal/grpcserver/get_original_link.go (100.0%)</option>
 				
-				<option value="file8">github.com/alxrusinov/shorturl/internal/handler/api_shorten.go (90.2%)</option>
+				<option value="file8">github.com/alxrusinov/shorturl/internal/grpcserver/get_short_link.go (100.0%)</option>
 				
-				<option value="file9">github.com/alxrusinov/shorturl/internal/handler/api_shorten_batch.go (87.9%)</option>
+				<option value="file9">github.com/alxrusinov/shorturl/internal/grpcserver/get_user_links.go (100.0%)</option>
 				
-				<option value="file10">github.com/alxrusinov/shorturl/internal/handler/get_original_link.go (100.0%)</option>
+				<option value="file10">github.com/alxrusinov/shorturl/internal/grpcserver/grpc_server.go (25.0%)</option>
 				
-				<option value="file11">github.com/alxrusinov/shorturl/internal/handler/get_short_link.go (93.8%)</option>
+				<option value="file11">github.com/alxrusinov/shorturl/internal/grpcserver/ping.go (100.0%)</option>
 				
-				<option value="file12">github.com/alxrusinov/shorturl/internal/handler/get_user_links.go (84.6%)</option>
+				<option value="file12">github.com/alxrusinov/shorturl/internal/grpcserver/shorten.go (100.0%)</option>
 				
-				<option value="file13">github.com/alxrusinov/shorturl/internal/handler/handler.go (100.0%)</option>
+				<option value="file13">github.com/alxrusinov/shorturl/internal/grpcserver/shorten_batch.go (100.0%)</option>
 				
-				<option value="file14">github.com/alxrusinov/shorturl/internal/handler/helpers.go (100.0%)</option>
+				<option value="file14">github.com/alxrusinov/shorturl/internal/grpcserver/stats.go (100.0%)</option>
 				
-				<option value="file15">github.com/alxrusinov/shorturl/internal/handler/middleware.go (46.7%)</option>
+				<option value="file15">github.com/alxrusinov/shorturl/internal/handler/api_delete_links.go (89.5%)</option>
 				
-				<option value="file16">github.com/alxrusinov/shorturl/internal/handler/ping.go (100.0%)</option>
+				<option value="file16">github.com/alxrusinov/shorturl/internal/handler/api_shorten.go (90.2%)</option>
 				
-				<option value="file17">github.com/alxrusinov/shorturl/internal/logger/logger.go (100.0%)</option>
+				<option value="file17">github.com/alxrusinov/shorturl/internal/handler/api_shorten_batch.go (87.9%)</option>
 				
-				<option value="file18">github.com/alxrusinov/shorturl/internal/server/server.go (92.9%)</option>
+				<option value="file18">github.com/alxrusinov/shorturl/internal/handler/get_original_link.go (100.0%)</option>
 				
-				<option value="file19">github.com/alxrusinov/shorturl/internal/store/dbstore/create_table.go (0.0%)</option>
+				<option value="file19">github.com/alxrusinov/shorturl/internal/handler/get_short_link.go (93.8%)</option>
 				
-				<option value="file20">github.com/alxrusinov/shorturl/internal/store/dbstore/db_store.go (0.0%)</option>
+				<option value="file20">github.com/alxrusinov/shorturl/internal/handler/get_user_links.go (84.6%)</option>
 				
-				<option value="file21">github.com/alxrusinov/shorturl/internal/store/dbstore/delete_links.go (0.0%)</option>
+				<option value="file21">github.com/alxrusinov/shorturl/internal/handler/handler.go (100.0%)</option>
 				
-				<option value="file22">github.com/alxrusinov/shorturl/internal/store/dbstore/get_link.go (0.0%)</option>
+				<option value="file22">github.com/alxrusinov/shorturl/internal/handler/helpers.go (100.0%)</option>
 				
-				<option value="file23">github.com/alxrusinov/shorturl/internal/store/dbstore/get_links.go (0.0%)</option>
+				<option value="file23">github.com/alxrusinov/shorturl/internal/handler/middleware.go (85.3%)</option>
 				
-				<option value="file24">github.com/alxrusinov/shorturl/internal/store/dbstore/ping.go (0.0%)</option>
+				<option value="file24">github.com/alxrusinov/shorturl/internal/handler/ping.go (100.0%)</option>
 				
-				<option value="file25">github.com/alxrusinov/shorturl/internal/store/dbstore/set_batch_links.go (0.0%)</option>
+				<option value="file25">github.com/alxrusinov/shorturl/internal/handler/stats.go (100.0%)</option>
 				
-				<option value="file26">github.com/alxrusinov/shorturl/internal/store/dbstore/set_link.go (0.0%)</option>
+				<option value="file26">github.com/alxrusinov/shorturl/internal/logger/logger.go (100.0%)</option>
 				
-				<option value="file27">github.com/alxrusinov/shorturl/internal/store/filestore/file_store.go (36.0%)</option>
+				<option value="file27">github.com/alxrusinov/shorturl/internal/netutils/netutils.go (100.0%)</option>
 				
-				<option value="file28">github.com/alxrusinov/shorturl/internal/store/inmemorystore/in_memory_store.go (100.0%)</option>
+				<option value="file28">github.com/alxrusinov/shorturl/internal/server/server.go (71.4%)</option>
 				
-				<option value="file29">github.com/alxrusinov/shorturl/internal/store/mockstore/mock_store.go (100.0%)</option>
+				<option value="file29">github.com/alxrusinov/shorturl/internal/store/dbstore/create_table.go (100.0%)</option>
+				
+				<option value="file30">github.com/alxrusinov/shorturl/internal/store/dbstore/db_store.go (0.0%)</option>
+				
+				<option value="file31">github.com/alxrusinov/shorturl/internal/store/dbstore/db_store.mock.go (80.0%)</option>
+				
+				<option value="file32">github.com/alxrusinov/shorturl/internal/store/dbstore/delete_links.go (94.7%)</option>
+				
+				<option value="file33">github.com/alxrusinov/shorturl/internal/store/dbstore/get_link.go (100.0%)</option>
+				
+				<option value="file34">github.com/alxrusinov/shorturl/internal/store/dbstore/get_links.go (92.3%)</option>
+				
+				<option value="file35">github.com/alxrusinov/shorturl/internal/store/dbstore/get_stat.go (100.0%)</option>
+				
+				<option value="file36">github.com/alxrusinov/shorturl/internal/store/dbstore/ping.go (100.0%)</option>
+				
+				<option value="file37">github.com/alxrusinov/shorturl/internal/store/dbstore/set_batch_links.go (100.0%)</option>
+				
+				<option value="file38">github.com/alxrusinov/shorturl/internal/store/dbstore/set_link.go (100.0%)</option>
+				
+				<option value="file39">github.com/alxrusinov/shorturl/internal/store/filestore/file_store.go (36.3%)</option>
+				
+				<option value="file40">github.com/alxrusinov/shorturl/internal/store/inmemorystore/in_memory_store.go (92.6%)</option>
+				
+				<option value="file41">github.com/alxrusinov/shorturl/internal/store/mockstore/mock_store.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -127,195 +151,17 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package main
+		<pre class="file" id="file0" style="display: none">package app
 
 import (
-        "fmt"
+        "context"
+        "errors"
+        "log"
+        "net/http"
 
-        "github.com/alxrusinov/shorturl/internal/app"
-        "github.com/alxrusinov/shorturl/internal/config"
-)
-
-var buildVersion string = "N/A"
-var buildDate string = "N/A"
-var buildCommit string = "N/A"
-
-func main() <span class="cov0" title="0">{
-        fmt.Printf("Build version: %s\nBuild date: %s\nBuild commit: %s\n", buildVersion, buildDate, buildCommit)
-
-        config := config.NewConfig()
-
-        config.Init()
-
-        app.Run(config)
-
-}</span>
-</pre>
-		
-		<pre class="file" id="file1" style="display: none">package main
-
-import (
-        "go/ast"
-
-        "github.com/timakin/bodyclose/passes/bodyclose"
-        mnd "github.com/tommy-muehle/go-mnd"
-        "golang.org/x/tools/go/analysis"
-        "golang.org/x/tools/go/analysis/multichecker"
-        "golang.org/x/tools/go/analysis/passes/asmdecl"
-        "golang.org/x/tools/go/analysis/passes/assign"
-        "golang.org/x/tools/go/analysis/passes/atomic"
-        "golang.org/x/tools/go/analysis/passes/atomicalign"
-        "golang.org/x/tools/go/analysis/passes/bools"
-        "golang.org/x/tools/go/analysis/passes/buildtag"
-        "golang.org/x/tools/go/analysis/passes/composite"
-        "golang.org/x/tools/go/analysis/passes/copylock"
-        "golang.org/x/tools/go/analysis/passes/deepequalerrors"
-        "golang.org/x/tools/go/analysis/passes/errorsas"
-        "golang.org/x/tools/go/analysis/passes/httpresponse"
-        "golang.org/x/tools/go/analysis/passes/ifaceassert"
-        "golang.org/x/tools/go/analysis/passes/lostcancel"
-        "golang.org/x/tools/go/analysis/passes/nilfunc"
-        "golang.org/x/tools/go/analysis/passes/nilness"
-        "golang.org/x/tools/go/analysis/passes/printf"
-        "golang.org/x/tools/go/analysis/passes/shift"
-        "golang.org/x/tools/go/analysis/passes/stdmethods"
-        "golang.org/x/tools/go/analysis/passes/stringintconv"
-        "golang.org/x/tools/go/analysis/passes/structtag"
-        "golang.org/x/tools/go/analysis/passes/tests"
-        "golang.org/x/tools/go/analysis/passes/unmarshal"
-        "golang.org/x/tools/go/analysis/passes/unreachable"
-        "golang.org/x/tools/go/analysis/passes/unsafeptr"
-        "golang.org/x/tools/go/analysis/passes/unusedresult"
-        "golang.org/x/tools/go/analysis/passes/unusedwrite"
-        "honnef.co/go/tools/staticcheck"
-)
-
-func run(pass *analysis.Pass) (interface{}, error) <span class="cov0" title="0">{
-        for _, file := range pass.Files </span><span class="cov0" title="0">{
-                ast.Inspect(file, func(node ast.Node) bool </span><span class="cov0" title="0">{
-                        switch x := node.(type) </span>{
-                        case *ast.File:<span class="cov0" title="0">
-                                if x.Name.Name == "main" </span><span class="cov0" title="0">{
-                                        return true
-                                }</span>
-                                <span class="cov0" title="0">return false</span>
-                        case *ast.FuncDecl:<span class="cov0" title="0">
-                                if x.Name.Name == "main" </span><span class="cov0" title="0">{
-                                        return true
-                                }</span>
-                                <span class="cov0" title="0">return false</span>
-                        case *ast.ExprStmt:<span class="cov0" title="0">
-                                if call, ok := x.X.(*ast.CallExpr); ok </span><span class="cov0" title="0">{
-                                        if callSel, ok := call.Fun.(*ast.SelectorExpr); ok </span><span class="cov0" title="0">{
-                                                if xxx, ok := callSel.X.(*ast.Ident); ok &amp;&amp; xxx.Name == "os" &amp;&amp; callSel.Sel.Name == "Exit" </span><span class="cov0" title="0">{
-                                                        pass.Reportf(x.Pos(), "use os exit expression in main")
-                                                }</span>
-
-                                        }
-                                }
-                        }
-                        <span class="cov0" title="0">return true</span>
-                })
-        }
-
-        <span class="cov0" title="0">return nil, nil</span>
-}
-
-func main() <span class="cov0" title="0">{
-
-        CheckOsExit := &amp;analysis.Analyzer{
-                Name: "checkosexit",
-                Doc:  "check use os.exit in package main function main",
-                Run:  run,
-        }
-
-        checks := map[string]bool{
-                "SA*":    true,
-                "S1012":  true,
-                "ST1013": true,
-                "QF1005": true,
-        }
-
-        var mychecks = []*analysis.Analyzer{
-                // report mismatches between assembly files and Go declarations
-                asmdecl.Analyzer,
-                // check for useless assignments
-                assign.Analyzer,
-                // check for common mistakes using the sync/atomic package
-                atomic.Analyzer,
-                // checks for non-64-bit-aligned arguments to sync/atomic functions
-                atomicalign.Analyzer,
-                // check for common mistakes involving boolean operators
-                bools.Analyzer,
-                // check that +build tags are well-formed and correctly located
-                buildtag.Analyzer,
-                // detect some violations of the cgo pointer passing rules. Not working in Arcadia for now
-                // cgocall.Analyzer,
-                // check for unkeyed composite literals
-                composite.Analyzer,
-                // check for locks erroneously passed by value
-                copylock.Analyzer,
-                // check for the use of reflect.DeepEqual with error values
-                deepequalerrors.Analyzer,
-                // check that the second argument to errors.As is a pointer to a type implementing error
-                errorsas.Analyzer,
-                // check for mistakes using HTTP responses
-                httpresponse.Analyzer,
-                // check cancel func returned by context.WithCancel is called
-                lostcancel.Analyzer,
-                // check for useless comparisons between functions and nil
-                nilfunc.Analyzer,
-                // inspects the control-flow graph of an SSA function and reports errors such as nil pointer dereferences and degenerate nil pointer comparisons
-                nilness.Analyzer,
-                // check consistency of Printf format strings and arguments
-                printf.Analyzer,
-                // check for possible unintended shadowing of variables EXPERIMENTAL
-                // shadow.Analyzer,
-                // check for shifts that equal or exceed the width of the integer
-                shift.Analyzer,
-                // check signature of methods of well-known interfaces
-                stdmethods.Analyzer,
-                // check that struct field tags conform to reflect.StructTag.Get
-                structtag.Analyzer,
-                // check for common mistaken usages of tests and examples
-                tests.Analyzer,
-                // report passing non-pointer or non-interface values to unmarshal
-                unmarshal.Analyzer,
-                // check for unreachable code
-                unreachable.Analyzer,
-                // check for invalid conversions of uintptr to unsafe.Pointer
-                unsafeptr.Analyzer,
-                // check for unused results of calls to some functions
-                unusedresult.Analyzer,
-                // check for unused writes
-                unusedwrite.Analyzer,
-                // check for string(int) conversions
-                stringintconv.Analyzer,
-                // check for impossible interface-to-interface type assertions
-                ifaceassert.Analyzer,
-                // check for maginc numbers
-                mnd.Analyzer,
-                // check for body was closed
-                bodyclose.Analyzer,
-                // os.exit checker
-                CheckOsExit,
-        }
-
-        for _, v := range staticcheck.Analyzers </span><span class="cov0" title="0">{
-                if checks[v.Analyzer.Name] </span><span class="cov0" title="0">{
-                        mychecks = append(mychecks, v.Analyzer)
-                }</span>
-        }
-
-        <span class="cov0" title="0">multichecker.Main(mychecks...)</span>
-}
-</pre>
-		
-		<pre class="file" id="file2" style="display: none">package app
-
-import (
         "github.com/alxrusinov/shorturl/internal/config"
         "github.com/alxrusinov/shorturl/internal/generator"
+        "github.com/alxrusinov/shorturl/internal/grpcserver"
         "github.com/alxrusinov/shorturl/internal/handler"
         "github.com/alxrusinov/shorturl/internal/logger"
         "github.com/alxrusinov/shorturl/internal/model"
@@ -326,7 +172,7 @@ import (
 )
 
 // Run configurate and run application
-func Run(config *config.Config) <span class="cov0" title="0">{
+func Run(ctx context.Context, config *config.Config) <span class="cov0" title="0">{
         var sStore handler.Store
 
         switch </span>{
@@ -341,9 +187,10 @@ func Run(config *config.Config) <span class="cov0" title="0">{
 
         <span class="cov0" title="0">generator := generator.NewGenerator()
 
-        handler := handler.NewHandler(sStore, config.ResponseURL, generator)
+        handler := handler.NewHandler(sStore, config.BaseURL, generator, config.TrustedSubnet)
         logger := logger.NewLogger()
-        newServer := server.NewServer(handler, config.BaseURL, logger)
+        newServer := server.NewServer(handler, config, logger)
+        newGRPSServer := grpcserver.NewGRPCServer(sStore, config.GRPCAddress, generator, config.GRPCAddress, config.TrustedSubnet)
 
         go func() </span><span class="cov0" title="0">{
                 var batch [][]model.StoreRecord
@@ -367,12 +214,38 @@ func Run(config *config.Config) <span class="cov0" title="0">{
                 }</span>
         }()
 
-        <span class="cov0" title="0">newServer.Run()</span>
+        <span class="cov0" title="0">go func(ctx context.Context) </span><span class="cov0" title="0">{
+                &lt;-ctx.Done()
+                if err := newServer.Shutdown(ctx); err != nil </span><span class="cov0" title="0">{
+                        log.Fatal("server has been crashed shutdown")
+                }</span>
+        }(ctx)
+
+        <span class="cov0" title="0">go func() </span><span class="cov0" title="0">{
+                var batch [][]model.StoreRecord
+
+                delChan := newGRPSServer.GetDelChan()
+
+                for val := range delChan </span><span class="cov0" title="0">{
+                        batch = append(batch, val)
+                        sStore.DeleteLinks(batch)
+
+                        batch = batch[0:0]
+                }</span>
+        }()
+
+        <span class="cov0" title="0">if err := newServer.Run(); !errors.Is(err, http.ErrServerClosed) </span><span class="cov0" title="0">{
+                log.Fatal("server has been crashed run")
+        }</span>
+
+        <span class="cov0" title="0">if err := grpcserver.Run(newGRPSServer); err != nil </span><span class="cov0" title="0">{
+                log.Fatal("grpc server has been crashed run")
+        }</span>
 
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package config
+		<pre class="file" id="file1" style="display: none">package config
 
 import (
         "flag"
@@ -383,19 +256,23 @@ import (
 // Default fields for config
 const (
         // DeafaultBaseURL - base url when server will be started
-        DeafaultBaseURL = "localhost:8080"
+        DefaulServerAddress = "localhost:8080"
         // DeafaultResponseURL - base url of returning link
-        DeafaultResponseURL = "http://localhost:8080"
+        DefaultBaseURL = "http://localhost:8080"
         // DefaultFilePath - path for storage file
         DefaultFilePath = "./config.json"
 )
 
 // Config has information about configuration of app
 type Config struct {
-        BaseURL         string
-        ResponseURL     string
-        FileStoragePath string
-        DBPath          string
+        ServerAddress   string `json:"server_address"`
+        BaseURL         string `json:"base_url"`
+        FileStoragePath string `json:"file_storage_path"`
+        DBPath          string `json:"database_dsn"`
+        TLS             bool   `json:"enable_https"`
+        TrustedSubnet   string `json:"trusted_subnet"`
+        GRPCAddress     string `json:"grpc_address"`
+        ConfigPath      string
 }
 
 var once sync.Once
@@ -403,20 +280,25 @@ var once sync.Once
 // Init parses flags and initial config
 func (config *Config) Init() <span class="cov8" title="1">{
         once.Do(func() </span><span class="cov8" title="1">{
-                flag.StringVar(&amp;config.BaseURL, "a", DeafaultBaseURL, "base url when server will be started")
-                flag.StringVar(&amp;config.ResponseURL, "b", DeafaultResponseURL, "base url of returning link")
+                flag.StringVar(&amp;config.ServerAddress, "a", DefaulServerAddress, "base url when server will be started")
+                flag.StringVar(&amp;config.BaseURL, "b", DefaultBaseURL, "base url of returning link")
                 flag.StringVar(&amp;config.FileStoragePath, "f", DefaultFilePath, "path for storage file")
                 flag.StringVar(&amp;config.DBPath, "d", "", "path to data base")
+                flag.BoolVar(&amp;config.TLS, "s", false, "configure http or https server")
+                flag.StringVar(&amp;config.ConfigPath, "c", "", "path to config file")
+                flag.StringVar(&amp;config.ConfigPath, "config", "", "path to config file")
+                flag.StringVar(&amp;config.TrustedSubnet, "t", "", "trust subnet")
+                flag.StringVar(&amp;config.GRPCAddress, "g", "", "grpc server address")
         }</span>)
 
         <span class="cov8" title="1">flag.Parse()
 
         if baseURL, ok := os.LookupEnv("SERVER_ADDRESS"); ok </span><span class="cov8" title="1">{
-                config.BaseURL = baseURL
+                config.ServerAddress = baseURL
         }</span>
 
-        <span class="cov8" title="1">if responseURL, ok := os.LookupEnv("BASE_URL"); ok </span><span class="cov8" title="1">{
-                config.ResponseURL = responseURL
+        <span class="cov8" title="1">if baseURL, ok := os.LookupEnv("BASE_URL"); ok </span><span class="cov8" title="1">{
+                config.BaseURL = baseURL
         }</span>
 
         <span class="cov8" title="1">if filePath, ok := os.LookupEnv("FILE_STORAGE_PATH"); ok </span><span class="cov8" title="1">{
@@ -426,6 +308,20 @@ func (config *Config) Init() <span class="cov8" title="1">{
         <span class="cov8" title="1">if dBPath, ok := os.LookupEnv("DATABASE_DSN"); ok </span><span class="cov8" title="1">{
                 config.DBPath = dBPath
         }</span>
+        <span class="cov8" title="1">if GRPCAddress, ok := os.LookupEnv("GRPC_ADDRESS"); ok </span><span class="cov0" title="0">{
+                config.GRPCAddress = GRPCAddress
+        }</span>
+        <span class="cov8" title="1">if trustedSubnet, ok := os.LookupEnv("TRUSTED_SUBNET"); ok </span><span class="cov0" title="0">{
+                config.TrustedSubnet = trustedSubnet
+        }</span>
+        <span class="cov8" title="1">if TLS, ok := os.LookupEnv("ENABLE_HTTPS"); ok &amp;&amp; TLS != "" </span><span class="cov0" title="0">{
+                config.TLS = true
+        }</span>
+        <span class="cov8" title="1">if configPath, ok := os.LookupEnv("CONFIG"); ok </span><span class="cov0" title="0">{
+                config.ConfigPath = configPath
+        }</span>
+
+        <span class="cov8" title="1">useConfigFile(config)</span>
 }
 
 // NewConfig return Config instance
@@ -434,7 +330,71 @@ func NewConfig() *Config <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package customerrors
+		<pre class="file" id="file2" style="display: none">package config
+
+import (
+        "encoding/json"
+        "io"
+        "os"
+)
+
+func readConfig(file *os.File) (*Config, error) <span class="cov0" title="0">{
+        content, err := io.ReadAll(file)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">configFromFile := new(Config)
+
+        err = json.Unmarshal(content, &amp;configFromFile)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return configFromFile, nil</span>
+}
+
+func useConfigFile(config *Config) <span class="cov8" title="1">{
+        file, err := os.Open(config.ConfigPath)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">defer file.Close()
+
+        configFromFile, err := readConfig(file)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">if configFromFile.ServerAddress != "" &amp;&amp; config.ServerAddress == DefaulServerAddress </span><span class="cov0" title="0">{
+                config.ServerAddress = configFromFile.ServerAddress
+        }</span>
+
+        <span class="cov0" title="0">if configFromFile.BaseURL != "" &amp;&amp; config.BaseURL == DefaultBaseURL </span><span class="cov0" title="0">{
+                config.BaseURL = configFromFile.BaseURL
+        }</span>
+
+        <span class="cov0" title="0">if configFromFile.FileStoragePath != "" &amp;&amp; config.FileStoragePath == DefaultFilePath </span><span class="cov0" title="0">{
+                config.FileStoragePath = configFromFile.FileStoragePath
+        }</span>
+
+        <span class="cov0" title="0">if configFromFile.DBPath != "" &amp;&amp; config.DBPath == "" </span><span class="cov0" title="0">{
+                config.DBPath = configFromFile.DBPath
+        }</span>
+
+        <span class="cov0" title="0">if configFromFile.TLS &amp;&amp; !config.TLS </span><span class="cov0" title="0">{
+                config.TLS = configFromFile.TLS
+        }</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package customerrors
 
 // DuplicateValueError is error, returns when value exists
 type DuplicateValueError struct {
@@ -452,7 +412,7 @@ func (err *DuplicateValueError) Error() string <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package generator
+		<pre class="file" id="file4" style="display: none">package generator
 
 import (
         "crypto/md5"
@@ -501,12 +461,13 @@ func (g *Generator) GenerateUserID() (string, error) <span class="cov8" title="1
         return hash, nil</span>
 }
 
+// NewGenerator generate generator
 func NewGenerator() *Generator <span class="cov8" title="1">{
         return &amp;Generator{}
 }</span>
 </pre>
 		
-		<pre class="file" id="file6" style="display: none">package mockgenerator
+		<pre class="file" id="file5" style="display: none">package mockgenerator
 
 import "github.com/stretchr/testify/mock"
 
@@ -529,7 +490,7 @@ func (mg *MockGenerator) GenerateRandomString() (string, error) <span class="cov
 }</span>
 
 // GenerateUserID - mocked method of generator
-func (mg *MockGenerator) GenerateUserID() (string, error) <span class="cov0" title="0">{
+func (mg *MockGenerator) GenerateUserID() (string, error) <span class="cov8" title="1">{
         args := mg.Called()
 
         return args.String(indexZero), args.Error(indexOne)
@@ -541,7 +502,340 @@ func NewMockGenerator() *MockGenerator <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file7" style="display: none">package handler
+		<pre class="file" id="file6" style="display: none">package grpcserver
+
+import (
+        "context"
+
+        "github.com/alxrusinov/shorturl/internal/model"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+// APIDeleteLinks - deletes links for user
+func (g *GRPCServer) APIDeleteLinks(ctx context.Context, in *pb.DeleteLinkRequest) (*pb.DeleteResponse, error) <span class="cov8" title="1">{
+        var batch []model.StoreRecord
+
+        for _, val := range in.Links </span><span class="cov8" title="1">{
+                batch = append(batch, model.StoreRecord{
+                        UUID:      in.UserId,
+                        ShortLink: val,
+                })
+        }</span>
+
+        <span class="cov8" title="1">g.deleteChan &lt;- batch
+
+        return nil, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package grpcserver
+
+import (
+        "context"
+
+        "github.com/alxrusinov/shorturl/internal/model"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) GetOriginaltLink(ctx context.Context, in *pb.GetOriginalRequest) (*pb.GetOriginalResponse, error) <span class="cov8" title="1">{
+
+        link := &amp;model.StoreRecord{
+                ShortLink: in.ShortenLink,
+        }
+
+        res, err := g.store.GetLink(link)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">result := &amp;pb.GetOriginalResponse{
+                Link: res.OriginalLink,
+        }
+
+        return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package grpcserver
+
+import (
+        "context"
+
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) GetShortenLink(ctx context.Context, in *pb.GetShortLinkRequest) (*pb.GetShortLinkResponse, error) <span class="cov8" title="1">{
+        shortenURL, err := g.Generator.GenerateRandomString()
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">result := &amp;pb.GetShortLinkResponse{
+                ShortenLink: shortenURL,
+        }
+
+        return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package grpcserver
+
+import (
+        "context"
+        "fmt"
+
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) GetUserLinks(ctx context.Context, in *pb.UserLinksRequest) (*pb.UserLinksResponse, error) <span class="cov8" title="1">{
+        links, err := g.store.GetLinks(in.UserId)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">result := pb.UserLinksResponse{}
+
+        for _, link := range links </span><span class="cov8" title="1">{
+                newLink := &amp;pb.UserLinkResponse{
+                        ShortUrl:    fmt.Sprintf("%s/%s", g.responseAddr, link.ShortLink),
+                        OriginalUrl: link.OriginalLink,
+                }
+                result.Objects = append(result.Objects, newLink)
+        }</span>
+
+        <span class="cov8" title="1">return &amp;result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package grpcserver
+
+import (
+        "net"
+
+        "github.com/alxrusinov/shorturl/internal/model"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+        "google.golang.org/grpc"
+        _ "google.golang.org/grpc/encoding/gzip"
+)
+
+// Store - store for grpc
+type Store interface {
+        GetLink(arg *model.StoreRecord) (*model.StoreRecord, error)
+        SetLink(arg *model.StoreRecord) (*model.StoreRecord, error)
+        SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error)
+        Ping() error
+        GetLinks(userID string) ([]model.StoreRecord, error)
+        DeleteLinks(shorts [][]model.StoreRecord) error
+        GetStat() (*model.StatResponse, error)
+}
+
+// Type Generator is a type for generator
+type Generator interface {
+        GenerateRandomString() (string, error)
+        GenerateUserID() (string, error)
+}
+
+// GRPCServer - typ of grpc server
+type GRPCServer struct {
+        pb.UnimplementedHandlerServer
+        store         Store
+        addr          string
+        responseAddr  string
+        trustedSubnet string
+        deleteChan    chan []model.StoreRecord
+        Generator     Generator
+}
+
+// Run - method of GRPCServer for runnning app
+func Run(g *GRPCServer) error <span class="cov0" title="0">{
+        server, err := net.Listen("tcp", g.addr)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">s := grpc.NewServer()
+
+        pb.RegisterHandlerServer(s, g)
+
+        err = s.Serve(server)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+
+}
+
+func (g *GRPCServer) GetDelChan() &lt;-chan []model.StoreRecord <span class="cov8" title="1">{
+        return g.deleteChan
+}</span>
+
+// NewGRPCServer creates GRPCServer
+func NewGRPCServer(store Store, addr string, generator Generator, responseAddr string, trustedSubnet string) *GRPCServer <span class="cov8" title="1">{
+        server := &amp;GRPCServer{
+                store:         store,
+                addr:          addr,
+                deleteChan:    make(chan []model.StoreRecord),
+                Generator:     generator,
+                responseAddr:  responseAddr,
+                trustedSubnet: trustedSubnet,
+        }
+
+        return server
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package grpcserver
+
+import (
+        "context"
+
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) Ping(ctx context.Context, req *pb.PingRequest) (*pb.PingResponse, error) <span class="cov8" title="1">{
+        var response pb.PingResponse
+
+        err := g.store.Ping()
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return &amp;response, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package grpcserver
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/alxrusinov/shorturl/internal/model"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) Shorten(ctx context.Context, in *pb.ShortenRequest) (*pb.ShortenResponse, error) <span class="cov8" title="1">{
+        shortenURL, err := g.Generator.GenerateRandomString()
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">links := &amp;model.StoreRecord{
+                ShortLink:    shortenURL,
+                OriginalLink: in.Url,
+                UUID:         in.UserId,
+        }
+
+        res, err := g.store.SetLink(links)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">result := &amp;pb.ShortenResponse{
+                Result: fmt.Sprintf("%s/%s", g.responseAddr, res.ShortLink),
+        }
+
+        return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package grpcserver
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/alxrusinov/shorturl/internal/model"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) ShortenBatch(ctx context.Context, in *pb.ShortenBatchRequest) (*pb.ShortenBatchResponse, error) <span class="cov8" title="1">{
+        var content []*model.StoreRecord
+
+        for _, val := range in.Objects </span><span class="cov8" title="1">{
+
+                shortenURL, err := g.Generator.GenerateRandomString()
+
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">rec := &amp;model.StoreRecord{
+                        UUID:          in.UserId,
+                        OriginalLink:  val.OriginalUrl,
+                        CorrelationID: val.CorrelationId,
+                        ShortLink:     shortenURL,
+                }
+
+                content = append(content, rec)</span>
+        }
+
+        <span class="cov8" title="1">res, err := g.store.SetBatchLink(content)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">result := new(pb.ShortenBatchResponse)
+
+        for _, val := range res </span><span class="cov8" title="1">{
+                rec := &amp;pb.ShortenItemResponse{
+                        CorrelationId: val.CorrelationID,
+                        ShortUrl:      fmt.Sprintf("%s/%s", g.responseAddr, val.ShortLink),
+                }
+
+                result.Objects = append(result.Objects, rec)
+        }</span>
+
+        <span class="cov8" title="1">return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package grpcserver
+
+import (
+        "context"
+        "errors"
+        "fmt"
+
+        "github.com/alxrusinov/shorturl/internal/netutils"
+        pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
+)
+
+func (g *GRPCServer) Stats(ctx context.Context, in *pb.StatsRequest) (*pb.StatsResponse, error) <span class="cov8" title="1">{
+        if in.XRealIp == "" </span><span class="cov8" title="1">{
+                return nil, errors.New("forbidden")
+        }</span>
+
+        <span class="cov8" title="1">trusted, err := netutils.CheckSubnet(g.trustedSubnet, in.XRealIp)
+
+        if !trusted || err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("forbidden: %v", err)
+        }</span>
+
+        <span class="cov8" title="1">res, err := g.store.GetStat()
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">result := &amp;pb.StatsResponse{
+                Urls:  int32(res.URLS),
+                Users: int32(res.Users),
+        }
+
+        return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package handler
 
 import (
         "encoding/json"
@@ -597,7 +891,7 @@ func (handler *Handler) APIDeleteLinks(ctx *gin.Context) <span class="cov8" titl
 }
 </pre>
 		
-		<pre class="file" id="file8" style="display: none">package handler
+		<pre class="file" id="file16" style="display: none">package handler
 
 import (
         "encoding/json"
@@ -697,7 +991,7 @@ func (handler *Handler) APIShorten(ctx *gin.Context) <span class="cov8" title="1
 }
 </pre>
 		
-		<pre class="file" id="file9" style="display: none">package handler
+		<pre class="file" id="file17" style="display: none">package handler
 
 import (
         "encoding/json"
@@ -774,7 +1068,7 @@ func (handler *Handler) APIShortenBatch(ctx *gin.Context) <span class="cov8" tit
 }
 </pre>
 		
-		<pre class="file" id="file10" style="display: none">package handler
+		<pre class="file" id="file18" style="display: none">package handler
 
 import (
         "net/http"
@@ -806,7 +1100,7 @@ func (handler *Handler) GetOriginalLink(ctx *gin.Context) <span class="cov8" tit
 }
 </pre>
 		
-		<pre class="file" id="file11" style="display: none">package handler
+		<pre class="file" id="file19" style="display: none">package handler
 
 import (
         "errors"
@@ -887,7 +1181,7 @@ func (handler *Handler) GetShortLink(ctx *gin.Context) <span class="cov8" title=
 }
 </pre>
 		
-		<pre class="file" id="file12" style="display: none">package handler
+		<pre class="file" id="file20" style="display: none">package handler
 
 import (
         "encoding/json"
@@ -956,14 +1250,15 @@ func (handler *Handler) GetUserLinks(ctx *gin.Context) <span class="cov8" title=
 }
 </pre>
 		
-		<pre class="file" id="file13" style="display: none">package handler
+		<pre class="file" id="file21" style="display: none">package handler
 
 import (
         "github.com/alxrusinov/shorturl/internal/model"
 )
 
 type options struct {
-        responseAddr string
+        responseAddr  string
+        trustedSubnet string
 }
 
 // Handler - structure with information about handler entity
@@ -993,19 +1288,22 @@ type Store interface {
         Ping() error
         GetLinks(userID string) ([]model.StoreRecord, error)
         DeleteLinks(shorts [][]model.StoreRecord) error
+        GetStat() (*model.StatResponse, error)
 }
 
+// Type Generator is a type for generator
 type Generator interface {
         GenerateRandomString() (string, error)
         GenerateUserID() (string, error)
 }
 
 // NewHandler returns new handler instance
-func NewHandler(sStore Store, responseAddr string, generator Generator) *Handler <span class="cov8" title="1">{
+func NewHandler(sStore Store, responseAddr string, generator Generator, trustedSubnet string) *Handler <span class="cov8" title="1">{
         handler := &amp;Handler{
                 store: sStore,
                 options: &amp;options{
-                        responseAddr: responseAddr,
+                        responseAddr:  responseAddr,
+                        trustedSubnet: trustedSubnet,
                 },
                 DeleteChan:  make(chan []model.StoreRecord),
                 Generator:   generator,
@@ -1016,7 +1314,7 @@ func NewHandler(sStore Store, responseAddr string, generator Generator) *Handler
 }</span>
 </pre>
 		
-		<pre class="file" id="file14" style="display: none">package handler
+		<pre class="file" id="file22" style="display: none">package handler
 
 import (
         "errors"
@@ -1025,6 +1323,7 @@ import (
 
 type errReader struct{}
 
+// Read implements method Read for reader
 func (er *errReader) Read(p []byte) (n int, err error) <span class="cov8" title="1">{
         return 0, errors.New("test error")
 }</span>
@@ -1038,7 +1337,7 @@ func newErrReader() *errReader <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file15" style="display: none">package handler
+		<pre class="file" id="file23" style="display: none">package handler
 
 import (
         "compress/gzip"
@@ -1108,7 +1407,7 @@ func (g *gzipWriter) WriteHeader(code int) <span class="cov0" title="0">{
 
 // LoggerMiddleware - middleware adds logger
 func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.HandlerFunc <span class="cov8" title="1">{
-        return func(c *gin.Context) </span><span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov8" title="1">{
                 start := time.Now()
 
                 uri := c.Request.RequestURI
@@ -1128,21 +1427,20 @@ func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.Handl
 
 // CompressMiddleware - middleware adds compressing of contetnt
 func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc <span class="cov8" title="1">{
-        return func(c *gin.Context) </span><span class="cov0" title="0">{
+        return func(c *gin.Context) </span><span class="cov8" title="1">{
                 contentEncoding := c.Request.Header.Values("Content-Encoding")
-                acceptEncoding := c.Request.Header.Values("Accept-Encoding")
 
                 contentType := c.Request.Header.Values("Content-Type")
 
-                if !checkContentType(contentType) &amp;&amp; c.Request.Method != http.MethodPost </span><span class="cov0" title="0">{
+                if !checkContentType(contentType) &amp;&amp; c.Request.Method != http.MethodPost </span><span class="cov8" title="1">{
                         c.Next()
                         return
                 }</span>
 
-                <span class="cov0" title="0">if checkGzip(contentEncoding) </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if checkGzip(contentEncoding) </span><span class="cov8" title="1">{
                         rawContent, err := gzip.NewReader(c.Request.Body)
 
-                        if err != nil &amp;&amp; err != io.EOF </span><span class="cov0" title="0">{
+                        if err != nil &amp;&amp; err != io.EOF </span><span class="cov8" title="1">{
                                 c.AbortWithStatus(http.StatusInternalServerError)
                                 return
                         }</span>
@@ -1154,9 +1452,11 @@ func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc <span class=
 
                 }
 
-                <span class="cov0" title="0">c.Next()
+                <span class="cov8" title="1">c.Next()
 
-                if checkGzip(acceptEncoding) </span><span class="cov0" title="0">{
+                acceptEncoding := c.Writer.Header().Values("Accept-Encoding")
+
+                if checkGzip(acceptEncoding) </span><span class="cov8" title="1">{
                         gz := gzip.NewWriter(c.Writer)
                         c.Writer.Header().Set("Content-Encoding", "gzip")
                         c.Writer = &amp;gzipWriter{c.Writer, gz}
@@ -1174,15 +1474,15 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc <span class="c
                 if method == http.MethodPost </span><span class="cov8" title="1">{
                         userID, err := c.Cookie(UserCookie)
 
-                        if err != nil </span><span class="cov0" title="0">{
+                        if err != nil </span><span class="cov8" title="1">{
                                 userID, err = middlwares.Generator.GenerateUserID()
 
-                                if err != nil </span><span class="cov0" title="0">{
+                                if err != nil </span><span class="cov8" title="1">{
                                         c.AbortWithStatus(http.StatusInternalServerError)
                                         return
                                 }</span>
 
-                                <span class="cov0" title="0">c.SetCookie(UserCookie, userID, seconds*minutes*hours, "/", "localhost", false, true)</span>
+                                <span class="cov8" title="1">c.SetCookie(UserCookie, userID, seconds*minutes*hours, "/", "localhost", false, true)</span>
 
                         }
 
@@ -1228,6 +1528,7 @@ func (middlwares *Middlewares) CookieMiddleware() gin.HandlerFunc <span class="c
         }
 }
 
+// NewMiddlwares create new Middlwares
 func NewMiddlwares(generator Generator) *Middlewares <span class="cov8" title="1">{
         return &amp;Middlewares{
                 Generator: generator,
@@ -1235,7 +1536,7 @@ func NewMiddlwares(generator Generator) *Middlewares <span class="cov8" title="1
 }</span>
 </pre>
 		
-		<pre class="file" id="file16" style="display: none">package handler
+		<pre class="file" id="file24" style="display: none">package handler
 
 import (
         "net/http"
@@ -1257,7 +1558,39 @@ func (handler *Handler) Ping(ctx *gin.Context) <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file17" style="display: none">package logger
+		<pre class="file" id="file25" style="display: none">package handler
+
+import (
+        "net/http"
+
+        "github.com/alxrusinov/shorturl/internal/netutils"
+        "github.com/gin-gonic/gin"
+)
+
+// Stats - handler for statistics of urls and users
+func (handler Handler) Stats(ctx *gin.Context) <span class="cov8" title="1">{
+        ip := ctx.Request.Header.Get("X-Real-IP")
+
+        trusted, err := netutils.CheckSubnet(handler.options.trustedSubnet, ip)
+
+        if !trusted || err != nil </span><span class="cov8" title="1">{
+                ctx.AbortWithStatus(http.StatusForbidden)
+                return
+        }</span>
+
+        <span class="cov8" title="1">res, err := handler.store.GetStat()
+
+        if err != nil </span><span class="cov8" title="1">{
+                ctx.AbortWithStatus(http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov8" title="1">ctx.JSON(http.StatusOK, res)</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package logger
 
 import (
         "os"
@@ -1274,13 +1607,41 @@ func NewLogger() zerolog.Logger <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file18" style="display: none">package server
+		<pre class="file" id="file27" style="display: none">package netutils
+
+import "net"
+
+// CheckSubnet - checks including ip into trustedSubnet
+func CheckSubnet(trustedSubnet, ip string) (bool, error) <span class="cov8" title="1">{
+        if trustedSubnet == "" </span><span class="cov8" title="1">{
+                return false, nil
+        }</span>
+
+        <span class="cov8" title="1">_, subnet, err := net.ParseCIDR(trustedSubnet)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">ipNet := net.ParseIP(ip)
+
+        trusted := subnet.Contains(ipNet)
+
+        return trusted, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package server
 
 import (
+        "context"
+        "net/http"
+
         "github.com/gin-contrib/pprof"
         "github.com/gin-gonic/gin"
         "github.com/rs/zerolog"
 
+        "github.com/alxrusinov/shorturl/internal/config"
         "github.com/alxrusinov/shorturl/internal/handler"
 )
 
@@ -1289,19 +1650,36 @@ type Server struct {
         mux     *gin.Engine
         handler *handler.Handler
         addr    string
+        server  *http.Server
+        TLS     bool
 }
 
 // Run runs the server
-func (server *Server) Run() <span class="cov0" title="0">{
-        server.mux.Run(server.addr)
-}</span>
+func (server *Server) Run() error <span class="cov0" title="0">{
+        if server.TLS </span><span class="cov0" title="0">{
+                return server.server.ListenAndServe()
+        }</span>
+
+        <span class="cov0" title="0">return server.server.ListenAndServe()</span>
+
+}
+
+// Shutsown realize gracefull shutdown server
+func (server *Server) Shutdown(ctx context.Context) error <span class="cov0" title="0">{
+        if err := server.server.Shutdown(ctx); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
 
 // NewServer initialize and return new server instance
-func NewServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Server <span class="cov8" title="1">{
+func NewServer(handler *handler.Handler, config *config.Config, logger zerolog.Logger) *Server <span class="cov8" title="1">{
         server := &amp;Server{
                 mux:     gin.New(),
                 handler: handler,
-                addr:    addr,
+                addr:    config.ServerAddress,
+                TLS:     config.TLS,
         }
 
         server.mux.Use(server.handler.Middlewares.LoggerMiddleware(logger))
@@ -1324,17 +1702,23 @@ func NewServer(handler *handler.Handler, addr string, logger zerolog.Logger) *Se
 
         server.mux.DELETE("/api/user/urls", server.handler.APIDeleteLinks)
 
+        server.mux.GET("/api/internal/stats", server.handler.Stats)
         pprof.Register(server.mux)
+
+        server.server = &amp;http.Server{
+                Addr:    server.addr,
+                Handler: server.mux,
+        }
 
         return server
 }</span>
 </pre>
 		
-		<pre class="file" id="file19" style="display: none">package dbstore
+		<pre class="file" id="file29" style="display: none">package dbstore
 
 import "context"
 
-func (store *DBStore) createTable() error <span class="cov0" title="0">{
+func (store *DBStore) createTable() error <span class="cov8" title="1">{
         initialQuery := `CREATE TABLE IF NOT EXISTS links (
                 id SERIAL PRIMARY KEY,
                 user_id TEXT,
@@ -1346,15 +1730,15 @@ func (store *DBStore) createTable() error <span class="cov0" title="0">{
 
         _, err := store.db.ExecContext(context.Background(), initialQuery)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 </pre>
 		
-		<pre class="file" id="file20" style="display: none">package dbstore
+		<pre class="file" id="file30" style="display: none">package dbstore
 
 import (
         "database/sql"
@@ -1365,8 +1749,7 @@ import (
 
 // DBStore implements Store interface for data base
 type DBStore struct {
-        db          *sql.DB
-        insertQuery *sql.Stmt
+        db *sql.DB
 }
 
 // NewDBStore initializes and returns data base store instance
@@ -1387,20 +1770,7 @@ func NewDBStore(dbPath string) *DBStore <span class="cov0" title="0">{
                 log.Fatal(err)
         }</span>
 
-        <span class="cov0" title="0">insertQueryString := `INSERT INTO links (short, original, correlation_id, user_id)
-                                VALUES ($1, $2, $3, $4)
-                                RETURNING short, original, correlation_id, user_id;
-                                `
-
-        insertQuery, err := db.Prepare(insertQueryString)
-
-        if err != nil </span><span class="cov0" title="0">{
-                log.Fatal(err)
-        }</span>
-
-        <span class="cov0" title="0">store.insertQuery = insertQuery
-
-        return store</span>
+        <span class="cov0" title="0">return store</span>
 }
 
 // CloseConnection is a method closed db connection
@@ -1410,7 +1780,31 @@ func CloseConnection(db *sql.DB) <span class="cov0" title="0">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file21" style="display: none">package dbstore
+		<pre class="file" id="file31" style="display: none">package dbstore
+
+import (
+        "github.com/DATA-DOG/go-sqlmock"
+        _ "github.com/jackc/pgx/v5/stdlib"
+)
+
+// NewDBStoreMock creates db mock instance
+func NewDBStoreMock() (*DBStore, sqlmock.Sqlmock, error) <span class="cov8" title="1">{
+        db, mock, err := sqlmock.New(sqlmock.MonitorPingsOption(true))
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, nil, err
+        }</span>
+
+        <span class="cov8" title="1">storeMock := &amp;DBStore{
+                db: db,
+        }
+
+        return storeMock, mock, nil</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package dbstore
 
 import (
         "context"
@@ -1421,46 +1815,46 @@ import (
 )
 
 // DeleteLinks deletes links from data base
-func (store *DBStore) DeleteLinks(shorts [][]model.StoreRecord) error <span class="cov0" title="0">{
+func (store *DBStore) DeleteLinks(shorts [][]model.StoreRecord) error <span class="cov8" title="1">{
         tx, err := store.db.Begin()
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">defer tx.Commit()
+        <span class="cov8" title="1">defer tx.Commit()
 
         preparedShorts := []string{}
         preparedIDs := []string{}
 
-        for _, val := range shorts </span><span class="cov0" title="0">{
+        for _, val := range shorts </span><span class="cov8" title="1">{
                 userID := val[0].UUID
                 preparedIDs = append(preparedIDs, fmt.Sprint("'"+userID+"'"))
 
-                for _, shortLink := range val </span><span class="cov0" title="0">{
+                for _, shortLink := range val </span><span class="cov8" title="1">{
                         preparedShorts = append(preparedShorts, fmt.Sprint("'"+shortLink.ShortLink+"'"))
                 }</span>
         }
 
-        <span class="cov0" title="0">shortsPlaceholders := strings.Join(preparedShorts, ", ")
+        <span class="cov8" title="1">shortsPlaceholders := strings.Join(preparedShorts, ", ")
         userIDsPlaceholders := strings.Join(preparedIDs, ", ")
 
         rows, err := tx.QueryContext(context.Background(), `UPDATE links SET is_deleted = TRUE WHERE user_id = ANY(ARRAY[`+userIDsPlaceholders+`]) and short = ANY(ARRAY[`+shortsPlaceholders+`]) RETURNING id;`)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 
 }
 </pre>
 		
-		<pre class="file" id="file22" style="display: none">package dbstore
+		<pre class="file" id="file33" style="display: none">package dbstore
 
 import (
         "context"
@@ -1469,21 +1863,21 @@ import (
 )
 
 // GetLink returns original link from data base by shorten
-func (store *DBStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, error) <span class="cov0" title="0">{
+func (store *DBStore) GetLink(arg *model.StoreRecord) (*model.StoreRecord, error) <span class="cov8" title="1">{
         var s string
         err := store.db.QueryRowContext(context.Background(), "SELECT original FROM links WHERE short = $1 and is_deleted = FALSE", arg.ShortLink).Scan(&amp;s)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">arg.OriginalLink = s
+        <span class="cov8" title="1">arg.OriginalLink = s
 
         return arg, nil</span>
 }
 </pre>
 		
-		<pre class="file" id="file23" style="display: none">package dbstore
+		<pre class="file" id="file34" style="display: none">package dbstore
 
 import (
         "context"
@@ -1492,52 +1886,72 @@ import (
 )
 
 // GetLinks returns information about all users links from data base
-func (store *DBStore) GetLinks(userID string) ([]model.StoreRecord, error) <span class="cov0" title="0">{
+func (store *DBStore) GetLinks(userID string) ([]model.StoreRecord, error) <span class="cov8" title="1">{
         rows, err := store.db.QueryContext(context.Background(), "SELECT user_id, short, original, correlation_id, is_deleted FROM links WHERE user_id = $1", userID)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">defer rows.Close()
+        <span class="cov8" title="1">defer rows.Close()
 
         var result []model.StoreRecord
 
-        for rows.Next() </span><span class="cov0" title="0">{
+        for rows.Next() </span><span class="cov8" title="1">{
                 var row model.StoreRecord
 
-                if err := rows.Scan(&amp;row.UUID, &amp;row.ShortLink, &amp;row.OriginalLink, &amp;row.CorrelationID, &amp;row.Deleted); err != nil </span><span class="cov0" title="0">{
+                if err := rows.Scan(&amp;row.UUID, &amp;row.ShortLink, &amp;row.OriginalLink, &amp;row.CorrelationID, &amp;row.Deleted); err != nil </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
 
-                <span class="cov0" title="0">result = append(result, row)</span>
+                <span class="cov8" title="1">result = append(result, row)</span>
 
         }
 
-        <span class="cov0" title="0">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return result, nil</span>
+        <span class="cov8" title="1">return result, nil</span>
 
 }
 </pre>
 		
-		<pre class="file" id="file24" style="display: none">package dbstore
+		<pre class="file" id="file35" style="display: none">package dbstore
+
+import (
+        "github.com/alxrusinov/shorturl/internal/model"
+)
+
+// GetStat - gets dtatistics of urls and users
+func (store *DBStore) GetStat() (*model.StatResponse, error) <span class="cov8" title="1">{
+        result := new(model.StatResponse)
+
+        err := store.db.QueryRow("SELECT count(*) AS users, count(DISTINCT user_id) AS links FROM links").Scan(&amp;result.URLS, &amp;result.Users)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">package dbstore
 
 // Ping pings data base
-func (store *DBStore) Ping() error <span class="cov0" title="0">{
+func (store *DBStore) Ping() error <span class="cov8" title="1">{
         err := store.db.Ping()
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 </pre>
 		
-		<pre class="file" id="file25" style="display: none">package dbstore
+		<pre class="file" id="file37" style="display: none">package dbstore
 
 import (
         "context"
@@ -1548,44 +1962,40 @@ import (
 )
 
 // SetBatchLink adds links to data base by batch
-func (store *DBStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) <span class="cov0" title="0">{
+func (store *DBStore) SetBatchLink(arg []*model.StoreRecord) ([]*model.StoreRecord, error) <span class="cov8" title="1">{
         tx, err := store.db.Begin()
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">defer tx.Rollback()
-
-        stmt := tx.Stmt(store.insertQuery)
-
-        defer stmt.Close()
+        <span class="cov8" title="1">defer tx.Rollback()
 
         response := make([]*model.StoreRecord, 0)
 
-        for _, val := range arg </span><span class="cov0" title="0">{
+        for _, val := range arg </span><span class="cov8" title="1">{
                 res := &amp;model.StoreRecord{}
-                err := stmt.QueryRowContext(context.Background(), val.ShortLink, val.OriginalLink, val.CorrelationID, val.UUID).Scan(&amp;res.ShortLink, &amp;res.OriginalLink, &amp;res.CorrelationID, &amp;res.UUID)
+                err := store.db.QueryRowContext(context.Background(), insertQuery, val.ShortLink, val.OriginalLink, val.CorrelationID, val.UUID).Scan(&amp;res.ShortLink, &amp;res.OriginalLink, &amp;res.CorrelationID, &amp;res.UUID)
 
-                if err != nil &amp;&amp; !errors.Is(err, io.EOF) </span><span class="cov0" title="0">{
+                if err != nil &amp;&amp; !errors.Is(err, io.EOF) </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
 
-                <span class="cov0" title="0">response = append(response, res)</span>
+                <span class="cov8" title="1">response = append(response, res)</span>
 
         }
 
-        <span class="cov0" title="0">err = tx.Commit()
+        <span class="cov8" title="1">err = tx.Commit()
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return response, nil</span>
+        <span class="cov8" title="1">return response, nil</span>
 }
 </pre>
 		
-		<pre class="file" id="file26" style="display: none">package dbstore
+		<pre class="file" id="file38" style="display: none">package dbstore
 
 import (
         "context"
@@ -1598,37 +2008,37 @@ import (
 )
 
 // SetLink adds link to data base
-func (store *DBStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) <span class="cov0" title="0">{
+func (store *DBStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error) <span class="cov8" title="1">{
         var err error
         dbQuery := `INSERT INTO links (short, original, correlation_id, user_id)
                                 VALUES ($1, $2, $3, $4);
                                 `
 
-        selectQuery := `SELECT short FROM links WHERE original = $1 `
+        selectQuery := `SELECT short FROM links WHERE original = $1;`
 
         _, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID, arg.UUID)
 
-        if err != nil </span><span class="cov0" title="0">{
-                if dbErr, ok := err.(*pgconn.PgError); ok </span><span class="cov0" title="0">{
-                        if dbErr.Code == pgerrcode.UniqueViolation </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
+                if dbErr, ok := err.(*pgconn.PgError); ok </span><span class="cov8" title="1">{
+                        if dbErr.Code == pgerrcode.UniqueViolation </span><span class="cov8" title="1">{
 
                                 err := store.db.QueryRowContext(context.Background(), selectQuery, arg.OriginalLink).Scan(&amp;arg.ShortLink)
 
-                                if err != nil </span><span class="cov0" title="0">{
+                                if err != nil </span><span class="cov8" title="1">{
                                         return nil, err
                                 }</span>
 
-                                <span class="cov0" title="0">return arg, &amp;customerrors.DuplicateValueError{Err: dbErr}</span>
+                                <span class="cov8" title="1">return arg, &amp;customerrors.DuplicateValueError{Err: dbErr}</span>
                         }
                 }
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov8" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return arg, nil</span>
+        <span class="cov8" title="1">return arg, nil</span>
 }
 </pre>
 		
-		<pre class="file" id="file27" style="display: none">package filestore
+		<pre class="file" id="file39" style="display: none">package filestore
 
 import (
         "bufio"
@@ -1731,7 +2141,7 @@ func (store *FileStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, err
 func (store *FileStore) Ping() error <span class="cov8" title="1">{
         file, err := os.OpenFile(store.filePath, os.O_WRONLY|os.O_APPEND, 0666)
 
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
@@ -1867,6 +2277,13 @@ func (store *FileStore) DeleteLinks(shorts [][]model.StoreRecord) error <span cl
 
 }
 
+// GetStat - gets dtatistics of urls and users
+func (store *FileStore) GetStat() (*model.StatResponse, error) <span class="cov0" title="0">{
+        result := new(model.StatResponse)
+
+        return result, nil
+}</span>
+
 // NewFileStore returns new instance of file store
 func NewFileStore(filePath string) *FileStore <span class="cov8" title="1">{
         store := &amp;FileStore{filePath: filePath}
@@ -1875,7 +2292,7 @@ func NewFileStore(filePath string) *FileStore <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file28" style="display: none">package inmemorystore
+		<pre class="file" id="file40" style="display: none">package inmemorystore
 
 import (
         "errors"
@@ -1954,6 +2371,13 @@ func (store *InMemoryStore) DeleteLinks(shorts [][]model.StoreRecord) error <spa
         <span class="cov8" title="1">return nil</span>
 }
 
+// GetStat - gets dtatistics of urls and users
+func (store *InMemoryStore) GetStat() (*model.StatResponse, error) <span class="cov0" title="0">{
+        result := new(model.StatResponse)
+
+        return result, nil
+}</span>
+
 // NewInMemoryStore returns new store instance
 func NewInMemoryStore() *InMemoryStore <span class="cov8" title="1">{
         store := &amp;InMemoryStore{
@@ -1964,7 +2388,7 @@ func NewInMemoryStore() *InMemoryStore <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file29" style="display: none">package mockstore
+		<pre class="file" id="file41" style="display: none">package mockstore
 
 import (
         "github.com/alxrusinov/shorturl/internal/model"
@@ -2021,6 +2445,13 @@ func (ms *MockStore) DeleteLinks(shorts [][]model.StoreRecord) error <span class
         args := ms.Called(shorts)
 
         return args.Error(indexZero)
+}</span>
+
+// GetStat - gets dtatistics of urls and users
+func (ms *MockStore) GetStat() (*model.StatResponse, error) <span class="cov8" title="1">{
+        args := ms.Called()
+
+        return args.Get(indexZero).(*model.StatResponse), args.Error(indexOne)
 }</span>
 
 // NewMockStore returns new mockestore instnce

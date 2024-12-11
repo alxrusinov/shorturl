@@ -17,7 +17,7 @@ func (store *DBStore) SetLink(arg *model.StoreRecord) (*model.StoreRecord, error
 				VALUES ($1, $2, $3, $4);
 				`
 
-	selectQuery := `SELECT short FROM links WHERE original = $1 `
+	selectQuery := `SELECT short FROM links WHERE original = $1;`
 
 	_, err = store.db.ExecContext(context.Background(), dbQuery, arg.ShortLink, arg.OriginalLink, arg.CorrelationID, arg.UUID)
 

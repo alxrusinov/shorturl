@@ -3,7 +3,7 @@ package grpcserver
 import (
 	"context"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) Ping(ctx context.Context, req *pb.PingRequest) (*pb.PingResponse, error) {

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
 	"github.com/alxrusinov/shorturl/internal/netutils"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) Stats(ctx context.Context, in *pb.StatsRequest) (*pb.StatsResponse, error) {

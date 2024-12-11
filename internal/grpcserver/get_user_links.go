@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) GetUserLinks(ctx context.Context, in *pb.UserLinksRequest) (*pb.UserLinksResponse, error) {

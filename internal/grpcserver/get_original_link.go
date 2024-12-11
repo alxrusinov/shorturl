@@ -3,8 +3,8 @@ package grpcserver
 import (
 	"context"
 
-	pb "github.com/alxrusinov/shorturl/internal/grpchandler/proto"
 	"github.com/alxrusinov/shorturl/internal/model"
+	pb "github.com/alxrusinov/shorturl/pkg/grpchandler/proto"
 )
 
 func (g *GRPCServer) GetOriginaltLink(ctx context.Context, in *pb.GetOriginalRequest) (*pb.GetOriginalResponse, error) {

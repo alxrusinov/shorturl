@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/buger/jsonparser v1.1.1
 	github.com/gin-contrib/pprof v1.5.0
 	github.com/timakin/bodyclose v0.0.0-20241017074824-adbc21e6bf36

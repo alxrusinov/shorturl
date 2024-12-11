@@ -90,7 +90,6 @@ func (middlwares *Middlewares) LoggerMiddleware(logger zerolog.Logger) gin.Handl
 func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		contentEncoding := c.Request.Header.Values("Content-Encoding")
-		acceptEncoding := c.Request.Header.Values("Accept-Encoding")
 
 		contentType := c.Request.Header.Values("Content-Type")
 
@@ -115,6 +114,8 @@ func (middlwares *Middlewares) CompressMiddleware() gin.HandlerFunc {
 		}
 
 		c.Next()
+
+		acceptEncoding := c.Writer.Header().Values("Accept-Encoding")
 
 		if checkGzip(acceptEncoding) {
 			gz := gzip.NewWriter(c.Writer)
